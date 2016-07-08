@@ -11,14 +11,14 @@ namespace BoggleTests
     [TestClass]
     public class BasicFunctional
     {
-        private static Char[] board = {
+        private static char[] board = {
             'y', 'o', 'x',
             'r', 'b', 'a',
             'v', 'e', 'd' };
 
         private static uint width = 3;
         private static uint height = 3;
-        private static String[] solutions = {
+        private static string[] solutions = {
             "bred", "yore", "byre", "abed", "oread",
             "bore", "orby", "robed", "broad", "byroad",
             "robe", "bored", "derby", "bade", "aero",
@@ -28,8 +28,8 @@ namespace BoggleTests
         [TestMethod]
         public void EmptyBoard()
         {
-            Boggle b = new Boggle(0, 0, new Char[]{ });
-            IEnumerable<String> solutions = b.Solve();
+            Boggle b = new Boggle(0, 0, new char[]{ });
+            IEnumerable<string> solutions = b.Solve();
 
             Assert.AreEqual(solutions.Count<String>(), 0);
         }

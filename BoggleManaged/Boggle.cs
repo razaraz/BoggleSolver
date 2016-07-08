@@ -7,7 +7,7 @@ namespace BoggleManaged
 {
     public class Boggle
     {
-        public Boggle(uint width, uint height, Char[] board)
+        public Boggle(uint width, uint height, char[] board)
         {
             Width = width;
             Height = height;
@@ -16,18 +16,18 @@ namespace BoggleManaged
 
         public uint Width { get; private set; }
         public uint Height { get; private set; }
-        public Char[] Board { get; private set; }
+        public char[] Board { get; private set; }
 
-        public IEnumerable<String> Solve()
+        public IEnumerable<string> Solve()
         {
         }
 
         private class DictNode
         {
-            Char letter;
+            char letter;
             DictNode[] children;
         }
 
-        private async Task<DictNode> ProcessDictionaryNodesAsync();
+        private async Task<DictNode> ReadDictionaryNodesAsync(string dict);
     }
 }
