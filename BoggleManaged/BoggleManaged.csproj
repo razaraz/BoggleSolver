@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boggle.cs" />
+    <Compile Include="Dictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -67,6 +67,27 @@ namespace BoggleTests
         #endregion
 
         [TestMethod]
+        public void ReadMinimalDictionary()
+        {
+            char[] board = {
+                'm', 'a',
+                't', 'r' };
+            const uint boardWidth = 2;
+            const uint boardHeight = 2;
+            string[] DictionaryEntries = {
+                "am", "at", "arm", "art",
+                "mart", "mt", 
+                "ra", "ram", "rat", "tar",
+                "tram" };
+
+            Boggle b = new Boggle(boardWidth, boardHeight, board, 2);
+            PrivateObject accessor = new PrivateObject(b);
+            accessor.Invoke("ReadDictionaryNodesAsync", minimalDict, true);
+
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
         public void ThreeByThreeBoard()
         {
             char[] board = {
@@ -102,6 +123,24 @@ namespace BoggleTests
             const uint boardHeight = 2;
             string[] solutions = {
                 "今日は" };
+
+            Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
+
+            var testSolutions = from solution in b.Solve(minimalDict) orderby solution ascending select solution;
+
+            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+        }
+
+        [TestMethod]
+        public void DuplicateLetters()
+        {
+            char[] board = {
+                'm', 'a',
+                'a', 'r' };
+            const uint boardWidth = 2;
+            const uint boardHeight = 2;
+            string[] solutions = {
+                "arm", "ram", "raam",};
 
             Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
 

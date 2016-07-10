@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DictionaryTests.cs" />
     <Compile Include="FunctionalTests.cs" />
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -40,8 +40,12 @@ namespace BoggleManaged
             Height = height;
             Board = board;
 
-            //sortedBoard = board;
-            //Array.Sort(sortedBoard);
+            var query = from letter in board
+                        group letter by letter into letterGroup
+                        orderby letterGroup.Key
+                        select letterGroup;
+
+            var queriedBoard = query.ToArray();
         }
 
         public uint Width { get; private set; }
@@ -70,20 +74,14 @@ namespace BoggleManaged
 
         #region Private Implementation
 
-        private struct TileInfo
+        public struct TileInfo
         {
-            char Char;
-            uint Num;
+            public TileInfo(char c, uint n) { Char = c; Num = n; }
+            public char Char;
+            public uint Num;
         }
-        private List<TileInfo> BoardTiles;
+        private List<TileInfo> boardTiles;
 
-        private class DictNode
-        {
-            char letter;
-            DictNode[] children;
-        }
-
-        //private async Task<IEnumerable<DictNode>> ReadDictionaryNodesAsync(string dict);
 #endregion
     }
 }
