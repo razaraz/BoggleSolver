@@ -16,6 +16,9 @@ namespace BoggleManaged
     public class Boggle
     {
 #region Public Interface
+        /// <summary>
+        /// Creates a new Boggle board with the specified characters and dimentions
+        /// </summary>
         public Boggle(uint width, uint height, char[] board, uint minWordLength = 4)
         {
             if(board == null)
@@ -45,7 +48,12 @@ namespace BoggleManaged
         public uint Height { get; private set; }
         public char[] Board { get; private set; }
 
-        // Solves the boggle board using the given dictionary
+        /// <summary>
+        /// Solves the boggle board using the given dictionary
+        /// </summary>
+        /// <exception cref="System.IO.FileNotFoundException">
+        /// This exception will be thrown if the specified dictionary file cannot be opened.
+        /// </exception>
         public IEnumerable<string> Solve(string dict, bool caseSensitive = false)
         {
             // Open the dictionary
