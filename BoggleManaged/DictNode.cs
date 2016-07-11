@@ -56,7 +56,7 @@ namespace BoggleManaged
             }
             else
                 foreach (var child in Children)
-                    ToStringIndented(sb, indent + 1);
+                    child.Value.ToStringIndented(sb, indent + 1);
         }
 
         public override bool Equals(object obj)

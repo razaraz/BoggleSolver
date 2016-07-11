@@ -21,9 +21,9 @@ namespace BoggleManaged
     internal class Dictionary
     {
         #region Public Interface
-        public Dictionary(string file, IEnumerable<Boggle.TileInfo> tileInfo, bool caseSensitive = false)
+        public Dictionary(string file, IDictionary<char, uint> tileInfo, bool caseSensitive = false)
         {
-            this.tileInfo = tileInfo.ToArray();
+            this.tileInfo = tileInfo;
             this.CaseSensitive = caseSensitive;
 
             GenerateDictTree(file);
@@ -34,12 +34,11 @@ namespace BoggleManaged
         #endregion
 
         #region Private Implementation
-        private Boggle.TileInfo[] tileInfo;
+        private readonly IDictionary<char, uint> tileInfo;
 
         private void GenerateDictTree(string file)
         {
             Root = new DictNode(null);
-            uint[] tiles = (from tile in tileInfo select tile.Num).ToArray();
 
             using (StreamReader dictStream = new StreamReader(file))
             {
@@ -60,13 +59,19 @@ namespace BoggleManaged
 
         private bool ShouldLineBeProcessed(string line)
         {
-            char[] sortedLine = (from c in line orderby c select c).ToArray();
+            bool Process = true;
+            Dictionary<char, uint> tileOcurrances = new Dictionary<char, uint>(tileInfo);
 
             foreach(char c in line)
             {
-                
+                if(!tileOcurrances.ContainsKey(c)
+                    || tileOcurrances[c]-- == 0)
+                {
+                    Process = false;
+                    break;
+                }
             }
-            throw new NotImplementedException();
+            return Process;
         }
 
         private void SaveWord(string word)

@@ -66,14 +66,16 @@ namespace BoggleTests
         //
         #endregion
 
-        const string basicDict = "BasicDict.txt";
+        const string basicDict = "Dictionaries\\BasicDict.txt";
 
         #region Lower case
-        static readonly Boggle.TileInfo[] testTileInfoLowerCase = {
-            new Boggle.TileInfo( 'a', 2 ),
-            new Boggle.TileInfo( 'b', 1 ),
-            new Boggle.TileInfo( 'c', 1 ),
-        };
+        static readonly Dictionary<char, uint> testTileInfoLowerCase
+            = new Dictionary<char, uint>
+            {
+                ['a'] = 2,
+                ['b'] = 1,
+                ['c'] = 1
+            };
 
         static readonly DictNode testDictTreeLowerCase
             = new DictNode
@@ -130,17 +132,19 @@ namespace BoggleTests
         #endregion
 
         #region Mixed Case
-        static readonly Boggle.TileInfo[] testTileInfoMixedCase = {
-            new Boggle.TileInfo( 'A', 1 ),
-            new Boggle.TileInfo( 'a', 1 ),
-            new Boggle.TileInfo( 'b', 1 ),
-            new Boggle.TileInfo( 'c', 1 ),
+        static readonly Dictionary<char, uint> testTileInfoMixedCase
+            = new Dictionary<char, uint>
+            {
+                ['A'] = 1,
+                ['a'] = 1,
+                ['b'] = 1,
+                ['c'] = 1
         };
 
         static readonly DictNode testDictTreeMixedCase
             = new DictNode
             (
-                (char)0,
+                null,
                 false,
                 new DictNode[]
                 {
@@ -225,7 +229,7 @@ namespace BoggleTests
         [ExpectedException(typeof(System.IO.InvalidDataException), "The dictionary is not formatted in a proper format.")]
         public void DictionaryFileMalformed()
         {
-            string malformedDictionary = "MalformedDict.txt";
+            string malformedDictionary = "Dictionaries\\MalformedDict.txt";
 
             Dictionary d = new Dictionary(malformedDictionary, testTileInfoLowerCase);
         }
