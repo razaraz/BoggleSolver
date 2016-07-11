@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,30 +18,79 @@ namespace BoggleManaged
     /// <summary>
     /// Read and process a dictionary for usage in solving a boggle board
     /// </summary>
-    public class Dictionary : IEnumerable<string>
+    internal class Dictionary
     {
-    #region Public Interface
+        #region Public Interface
         public Dictionary(string file, IEnumerable<Boggle.TileInfo> tileInfo, bool caseSensitive = false)
         {
-            throw new NotImplementedException();
+            this.tileInfo = tileInfo.ToArray();
+            this.CaseSensitive = caseSensitive;
+
+            GenerateDictTree(file);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator<string> IEnumerable<string>.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        public DictNode Root { get; private set; }
+        public bool CaseSensitive { get; private set; }
         #endregion
 
-        private class DictNode
+        #region Private Implementation
+        private Boggle.TileInfo[] tileInfo;
+
+        private void GenerateDictTree(string file)
         {
-            public char letter;
-            public DictNode[] children;
+            Root = new DictNode(null);
+            uint[] tiles = (from tile in tileInfo select tile.Num).ToArray();
+
+            using (StreamReader dictStream = new StreamReader(file))
+            {
+                // Read letter groups
+                while(!dictStream.EndOfStream)
+                {
+                    string nextLine = dictStream.ReadLine();
+
+                    // Filter
+                    if(ShouldLineBeProcessed(nextLine))
+                    {
+                        // Save nodes
+                        SaveWord(nextLine);
+                    }
+                }
+            }
         }
+
+        private bool ShouldLineBeProcessed(string line)
+        {
+            char[] sortedLine = (from c in line orderby c select c).ToArray();
+
+            foreach(char c in line)
+            {
+                
+            }
+            throw new NotImplementedException();
+        }
+
+        private void SaveWord(string word)
+        {
+            DictNode currNode = Root;
+            int pos = 0;
+
+            while(pos < word.Length)
+            {
+                char currChar = word[pos];
+
+                if(!currNode.Children.ContainsKey(currChar))
+                {
+                    currNode.Children[currChar] = new DictNode(currChar);
+                }
+
+                currNode = currNode.Children[currChar];
+                pos++;
+            }
+
+            currNode.Word = true;
+        }
+
+        /*
 
         private async Task<IEnumerable<DictNode>> ReadDictionaryNodesAsync(string dict, bool caseSensitive)
         {
@@ -58,5 +108,7 @@ namespace BoggleManaged
         {
             return new char[] { };
         }
+        */
+        #endregion
     }
 }

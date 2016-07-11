@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BoggleManaged
@@ -26,7 +27,7 @@ namespace BoggleManaged
                 throw new ArgumentNullException("board");
             }
 
-            if (width * height != board.Length)
+            if (width * height != board.Length || board.Length > 64)
             {
                 throw new ArgumentOutOfRangeException("board", board.Length,  "Width and Height do not match the board size.");
             }
@@ -74,7 +75,12 @@ namespace BoggleManaged
 
         #region Private Implementation
 
-        public struct TileInfo
+        private uint[] GetNeighbors(uint location, BitArray visited)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal struct TileInfo
         {
             public TileInfo(char c, uint n) { Char = c; Num = n; }
             public char Char;

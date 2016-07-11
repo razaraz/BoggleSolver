@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoggleManaged", "BoggleManaged\BoggleManaged.csproj", "{E5F6DCA7-4D76-432E-BBC6-2CFB57D795A0}"
 EndProject
@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoggleTests", "BoggleTests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F785A554-B739-4490-ACB0-3FE964A8DEB9}"
 	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
 		README.txt = README.txt
 		Run.ps1 = Run.ps1
 	EndProjectSection

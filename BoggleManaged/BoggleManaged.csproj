@@ -39,8 +39,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Boggle.cs" />
     <Compile Include="Dictionary.cs" />
+    <Compile Include="DictNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
