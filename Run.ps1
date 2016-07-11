@@ -65,7 +65,7 @@ $MSBuildArgs = [string[]]@(
 							"/fileLogger2",
 							"/fileloggerparameters2:LogFile=BuildDetails.log;Verbosity=detailed",
 							"/fileLogger3",
-							"/fileloggerparameters2:LogFile=BuildSummary.log;Verbosity=quiet;Summary;PerformanceSummary")
+							"/fileloggerparameters3:LogFile=BuildSummary.log;Verbosity=quiet;Summary;PerformanceSummary")
 
 $MSBuildProc = Start-Process -FilePath $MSBuildExePath -ArgumentList $MSBuildArgs -WindowStyle Hidden -PassThru
 $MSBuildProc.WaitForExit();
