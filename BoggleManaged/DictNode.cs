@@ -18,20 +18,20 @@ namespace BoggleManaged
     /// </summary>
     internal class DictNode
     {
-        public DictNode(char? letter, bool word = false, IEnumerable<DictNode> children = null)
+        public DictNode(char letter, string word, IEnumerable<DictNode> children = null)
         {
             Letter = letter;
             Word = word;
 
             if (children != null)
-                Children = new SortedList<char?, DictNode>(children.ToDictionary(x => x.Letter));
+                Children = new SortedList<char, DictNode>(children.ToDictionary(x => x.Letter));
             else
-                Children = new SortedList<char?, DictNode>();
+                Children = new SortedList<char, DictNode>();
         }
 
-        public char? Letter;
-        public bool Word;
-        public SortedList<char?, DictNode> Children;
+        public char Letter;
+        public string Word;
+        public SortedList<char, DictNode> Children;
 
         public override string ToString()
         {

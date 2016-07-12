@@ -17,13 +17,13 @@ namespace BoggleTests
     [TestClass]
     public class InterfaceTests
     {
-        private static string minimalDict = "MinimalDict.txt";
+        private static string minimalDict = "Dictionaries\\MinimalDict.txt";
 
         [TestMethod]
         public void EmptyBoard()
         {
-            Boggle b = new Boggle(0, 0, new char[]{ }, 0);
-            IEnumerable<string> solutions = b.Solve(minimalDict);
+            Boggle b = new Boggle(0, 0, new char[]{ });
+            IEnumerable<string> solutions = b.Solve(minimalDict, 0);
 
             Assert.AreEqual(solutions.Count(), 0);
         }
@@ -32,14 +32,23 @@ namespace BoggleTests
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Width and Height do not match the board size.")]
         public void WrongBoardDimentions()
         {
-            Boggle b = new Boggle(1, 1, new char[] { }, 0);
+            Boggle b = new Boggle(1, 1, new char[] { });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "Boards larger than 64 spaces are not supported.")]
+        public void BoardTooBig()
+        {
+            Boggle b = new Boggle(1, 65, new char[65]);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "The minimum word length is greater than the total size of the board.")]
         public void MinWordLengthTooLong()
         {
-            Boggle b = new Boggle(0, 0, new char[] { }, 1);
+            Boggle b = new Boggle(0, 0, new char[] { });
+
+            b.Solve(minimalDict, 1);
         }
 
         [TestMethod]
@@ -56,9 +65,9 @@ namespace BoggleTests
         {
             string nonexistentDictionary = "NonexistentDict.txt";
 
-            Boggle b = new Boggle(0, 0, new char[] { }, 0);
+            Boggle b = new Boggle(0, 0, new char[] { });
 
-            b.Solve(nonexistentDictionary);
+            b.Solve(nonexistentDictionary, 0);
         }
     }
 }

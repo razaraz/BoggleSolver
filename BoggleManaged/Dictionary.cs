@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-// File: Dictionary.cs
+// File: DictionaryTree.cs
 // Author: Ramón Zarazúa B. (ramon@ztktech.com)
 // Date: Jul/09/2016
 // Description: Implementation of a class that reads and processes the 
@@ -18,27 +18,29 @@ namespace BoggleManaged
     /// <summary>
     /// Read and process a dictionary for usage in solving a boggle board
     /// </summary>
-    internal class Dictionary
+    internal class DictionaryTree
     {
         #region Public Interface
-        public Dictionary(string file, IDictionary<char, uint> tileInfo, bool caseSensitive = false)
+        public DictionaryTree(string file, IDictionary<char, uint> characterOcurrances, bool caseSensitive = true)
         {
-            this.tileInfo = tileInfo;
+            this.CharacterOccurrances = characterOcurrances;
             this.CaseSensitive = caseSensitive;
 
             GenerateDictTree(file);
         }
 
-        public DictNode Root { get; private set; }
+        public IEnumerable<DictNode> RootNodes { get { return rootNodes.Values; } }
         public bool CaseSensitive { get; private set; }
         #endregion
 
         #region Private Implementation
-        private readonly IDictionary<char, uint> tileInfo;
+        private readonly IDictionary<char, uint> CharacterOccurrances;
+
+        private SortedList<char, DictNode> rootNodes;
 
         private void GenerateDictTree(string file)
         {
-            Root = new DictNode(null);
+            //RootNodes = new DictNode[this.CharacterOccurrances.Count];
 
             using (StreamReader dictStream = new StreamReader(file))
             {
@@ -60,7 +62,7 @@ namespace BoggleManaged
         private bool ShouldLineBeProcessed(string line)
         {
             bool Process = true;
-            Dictionary<char, uint> tileOcurrances = new Dictionary<char, uint>(tileInfo);
+            Dictionary<char, uint> tileOcurrances = new Dictionary<char, uint>(CharacterOccurrances);
 
             foreach(char c in line)
             {
@@ -76,23 +78,25 @@ namespace BoggleManaged
 
         private void SaveWord(string word)
         {
-            DictNode currNode = Root;
+            DictNode currNode = null;
+            IDictionary<char, DictNode> currNodeGroup = rootNodes;
             int pos = 0;
 
             while(pos < word.Length)
             {
                 char currChar = word[pos];
 
-                if(!currNode.Children.ContainsKey(currChar))
+                if(!currNodeGroup.ContainsKey(currChar))
                 {
-                    currNode.Children[currChar] = new DictNode(currChar);
+                    currNodeGroup.Add(currChar, new DictNode(currChar, null));
                 }
 
                 currNode = currNode.Children[currChar];
+                currNodeGroup = currNode.Children;
                 pos++;
             }
 
-            currNode.Word = true;
+            currNode.Word = word;
         }
 
         /*

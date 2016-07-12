@@ -2,7 +2,7 @@
 // File: DictionaryTests.cs
 // Author: Ramón Zarazúa B. (ramon@ztktech.com)
 // Date: Jul/09/2016
-// Description: Tests that verify the functionality of the Boggle Dictionary
+// Description: Tests that verify the functionality of the Boggle DictionaryTree
 ///////////////////////////////////////////////////////////////////////////////
 using System;
 using System.Text;
@@ -77,35 +77,31 @@ namespace BoggleTests
                 ['c'] = 1
             };
 
-        static readonly DictNode testDictTreeLowerCase
-            = new DictNode
-            (
-                null,
-                false,
-                new DictNode[]
+        static readonly DictNode[] testDictTreeLowerCase
+            = new DictNode[]
                 {
                     new DictNode
                     (
                         'a',
-                        true,
+                        "a",
                         new DictNode[]
                         {
                             new DictNode
                             (
                                 'a',
-                                true,
+                                "aa",
                                 null
                             ),
                             new DictNode
                             (
                                 'b',
-                                true,
+                                "ab",
                                 new DictNode[]
                                 {
                                     new DictNode
                                     (
                                         'a',
-                                        true,
+                                        "aba",
                                         null
                                     )
                                 }
@@ -115,19 +111,18 @@ namespace BoggleTests
                     new DictNode
                     (
                         'b',
-                        false,
+                        null,
                         new DictNode[]
                         {
                             new DictNode
                             (
                                 'a',
-                                true,
+                                "ba",
                                 null
                             )
                         }
                     )
-                } 
-            );
+                };
 
         #endregion
 
@@ -141,35 +136,31 @@ namespace BoggleTests
                 ['c'] = 1
         };
 
-        static readonly DictNode testDictTreeMixedCase
-            = new DictNode
-            (
-                null,
-                false,
-                new DictNode[]
+        static readonly DictNode[] testDictTreeMixedCase
+            = new DictNode[]
                 {
                     new DictNode
                     (
                         'A',
-                        true,
+                        "A",
                         new DictNode[]
                         {
                             new DictNode
                             (
                                 'a',
-                                true,
+                                "Aa",
                                 null
                             ),
                             new DictNode
                             (
                                 'b',
-                                false,
+                                null,
                                 new DictNode[]
                                 {
                                     new DictNode
                                     (
                                         'a',
-                                        true,
+                                        "Aba",
                                         null
                                     )
                                 }
@@ -179,13 +170,13 @@ namespace BoggleTests
                     new DictNode
                     (
                         'a',
-                        true,
+                        "a",
                         new DictNode[]
                         {
                             new DictNode
                             (
                                 'b',
-                                true,
+                                "ab",
                                 null
                             )
                         }
@@ -193,27 +184,26 @@ namespace BoggleTests
                     new DictNode
                     (
                         'b',
-                        false,
+                        null,
                         new DictNode[]
                         {
                             new DictNode
                             (
                                 'a',
-                                true,
+                                "ba",
                                 new DictNode[]
                                 {
                                     new DictNode
                                     (
                                         'A',
-                                        true,
+                                        "baA",
                                         null
                                     )
                                 }
                             )
                         }
                     )
-                } 
-            );
+                };
         #endregion
 
         [TestMethod]
@@ -222,7 +212,7 @@ namespace BoggleTests
         {
             string nonexistentDictionary = "NonexistentDict.txt";
 
-            Dictionary d = new Dictionary(nonexistentDictionary, testTileInfoLowerCase);
+            DictionaryTree d = new DictionaryTree(nonexistentDictionary, testTileInfoLowerCase);
         }
 
         [TestMethod]
@@ -231,7 +221,7 @@ namespace BoggleTests
         {
             string malformedDictionary = "Dictionaries\\MalformedDict.txt";
 
-            Dictionary d = new Dictionary(malformedDictionary, testTileInfoLowerCase);
+            DictionaryTree d = new DictionaryTree(malformedDictionary, testTileInfoLowerCase);
         }
 
         static readonly string[] testBasicDictionaryWords;
@@ -239,19 +229,22 @@ namespace BoggleTests
         [TestMethod]
         public void DictionaryReadBasicDictionary()
         {
-            Dictionary d = new Dictionary(basicDict, testTileInfoMixedCase, false);
+            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoMixedCase, true);
 
             // Check to see if dictionaries are equal
-            Assert.AreEqual(d.Root, testDictTreeMixedCase);
+            throw new NotImplementedException();
+            //Assert.AreEqual(d.Root, testDictTreeMixedCase);
         }
 
         [TestMethod]
-        public void DictionaryCaseSensitive()
+        public void DictionaryCaseInsensitive()
         {
-            Dictionary d = new Dictionary(basicDict, testTileInfoLowerCase, true);
+            throw new NotImplementedException();
+            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoLowerCase, true);
 
             // Check to see if dictionaries are equal
-            Assert.AreEqual(d.Root, testDictTreeLowerCase);
+            throw new NotImplementedException();
+            //Assert.AreEqual(d.Root, testDictTreeLowerCase);
         }
     }
 }

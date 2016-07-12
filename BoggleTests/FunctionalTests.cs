@@ -67,27 +67,6 @@ namespace BoggleTests
         #endregion
 
         [TestMethod]
-        public void ReadMinimalDictionary()
-        {
-            char[] board = {
-                'm', 'a',
-                't', 'r' };
-            const uint boardWidth = 2;
-            const uint boardHeight = 2;
-            string[] DictionaryEntries = {
-                "am", "at", "arm", "art",
-                "mart", "mt", 
-                "ra", "ram", "rat", "tar",
-                "tram" };
-
-            Boggle b = new Boggle(boardWidth, boardHeight, board, 2);
-            PrivateObject accessor = new PrivateObject(b);
-            accessor.Invoke("ReadDictionaryNodesAsync", minimalDict, true);
-
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
         public void ThreeByThreeBoard()
         {
             char[] board = {
@@ -104,9 +83,9 @@ namespace BoggleTests
                 "read", "orbed", "verb", "aery", "bead",
                 "bread", "very", "road"};
 
-            Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
+            Boggle b = new Boggle(boardWidth, boardHeight, board);
 
-            var testSolutions = from solution in b.Solve(minimalDict) orderby solution ascending select solution;
+            var testSolutions = from solution in b.Solve(minimalDict, 4) orderby solution ascending select solution;
 
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
@@ -124,15 +103,15 @@ namespace BoggleTests
             string[] solutions = {
                 "今日は" };
 
-            Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
+            Boggle b = new Boggle(boardWidth, boardHeight, board);
 
-            var testSolutions = from solution in b.Solve(minimalDict) orderby solution ascending select solution;
+            var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
 
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
 
         [TestMethod]
-        public void DuplicateLetters()
+        public void Duplicates()
         {
             char[] board = {
                 'm', 'a',
@@ -142,9 +121,9 @@ namespace BoggleTests
             string[] solutions = {
                 "arm", "ram", "raam",};
 
-            Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
+            Boggle b = new Boggle(boardWidth, boardHeight, board);
 
-            var testSolutions = from solution in b.Solve(minimalDict) orderby solution ascending select solution;
+            var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
 
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
@@ -160,9 +139,39 @@ namespace BoggleTests
             string[] solutions = {
                 "arm", "art", "mart", "ram", "rat", "tar", "tram" };
 
-            Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
+            Boggle b = new Boggle(boardWidth, boardHeight, board);
 
-            var testSolutions = from solution in b.Solve(minimalDict) orderby solution ascending select solution;
+            var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
+
+            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+        }
+
+        [TestMethod]
+        public void TestTreeVisitor()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TraverseAllPossibleLetterCandidates()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void CaseInsensitiveSensitiveMinimalBoard()
+        {
+            char[] board = {
+                'M', 'a',
+                't', 'r' };
+            const uint boardWidth = 2;
+            const uint boardHeight = 2;
+            string[] solutions = {
+                "mat", "arm", "art", "mart", "ram", "rat", "tar", "tram" };
+
+            Boggle b = new Boggle(boardWidth, boardHeight, board);
+
+            var testSolutions = from solution in b.Solve(minimalDict, 3, false) orderby solution ascending select solution;
 
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
@@ -176,13 +185,20 @@ namespace BoggleTests
             const uint boardWidth = 2;
             const uint boardHeight = 2;
             string[] solutions = {
-                "art", "Mat", "rat", "tar"};
+                "Mat", "art", "rat", "tar"};
 
-            Boggle b = new Boggle(boardWidth, boardHeight, board, 3);
+            Boggle b = new Boggle(boardWidth, boardHeight, board);
 
-            var testSolutions = from solution in b.Solve(minimalDict) orderby solution ascending select solution;
+            var testSolutions = from solution in b.Solve(minimalDict, 3, true) orderby solution ascending select solution;
 
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+        }
+
+
+        [TestMethod]
+        public void DuplicateWordPaths()
+        {
+            throw new NotImplementedException();
         }
     }
 }
