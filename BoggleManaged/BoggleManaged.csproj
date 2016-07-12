@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Boggle.cs" />
-    <Compile Include="Dictionary.cs" />
+    <Compile Include="DictionaryTree.cs" />
     <Compile Include="DictNode.cs" />
   </ItemGroup>
   <ItemGroup>
