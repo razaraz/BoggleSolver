@@ -36,5 +36,13 @@ This script performs the following actions:
 
 --- Unit Tests ---
 
+The dictionaries I found and used for testing contained a few more words that could be formed
+on the 3x3 board than the ones in the test description:
+  abox
+  boread
+  daer
+  rebox
+  verby
+
   FILL ME IN!!!!!!!!!!!!!!!!!!!!!
   !!!!!!!!!!!!!!!!!!!!!!!!!

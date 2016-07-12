@@ -56,6 +56,7 @@
     <Compile Include="FunctionalTests.cs" />
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PerformanceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BoggleManaged\BoggleManaged.csproj">
@@ -73,7 +74,10 @@
     <Content Include="Dictionaries\MinimalDict.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Dictionaries\words.txt">
+    <Content Include="Dictionaries\EnglishDictionary1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dictionaries\EnglishDictionary2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
