@@ -29,6 +29,11 @@ namespace BoggleManaged
             GenerateDictTree(file);
         }
 
+        internal DictionaryTree(IEnumerable<DictNode> nodes)
+        {
+            this.rootNodes = new SortedList<char, DictNode>(nodes.ToDictionary(n => n.Letter));
+        }
+
         public IEnumerable<DictNode> RootNodes { get { return rootNodes.Values; } }
         public bool CaseSensitive { get; private set; }
         #endregion
@@ -40,7 +45,7 @@ namespace BoggleManaged
 
         private void GenerateDictTree(string file)
         {
-            //RootNodes = new DictNode[this.CharacterOccurrances.Count];
+            rootNodes = new SortedList<char, DictNode>(CharacterOccurrances.Count);
 
             using (StreamReader dictStream = new StreamReader(file))
             {
@@ -91,12 +96,35 @@ namespace BoggleManaged
                     currNodeGroup.Add(currChar, new DictNode(currChar, null));
                 }
 
-                currNode = currNode.Children[currChar];
+                currNode = currNodeGroup[currChar];
                 currNodeGroup = currNode.Children;
                 pos++;
             }
 
             currNode.Word = word;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var node in RootNodes)
+                node.ToStringIndented(sb, 0);
+
+            return sb.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            DictionaryTree rhs = (DictionaryTree)obj;
+
+            return rhs != null
+                && RootNodes.SequenceEqual(rhs.RootNodes);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         /*

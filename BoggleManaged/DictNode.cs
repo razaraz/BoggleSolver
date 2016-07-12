@@ -41,14 +41,16 @@ namespace BoggleManaged
             return sb.ToString();
         }
 
-        private void ToStringIndented(StringBuilder sb, int indent)
+        internal void ToStringIndented(StringBuilder sb, int indent)
         {
             sb.Append(' ', indent * 2);
+            sb.Append('\'');
             sb.Append(Letter);
-            sb.Append('\n');
+            sb.Append("'\n");
             sb.Append(' ', indent * 2);
+            sb.Append('\'');
             sb.Append(Word);
-            sb.Append('\n');
+            sb.Append("\"\n");
 
             if(Children == null)
             {

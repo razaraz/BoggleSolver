@@ -77,8 +77,8 @@ namespace BoggleTests
                 ['c'] = 1
             };
 
-        static readonly DictNode[] testDictTreeLowerCase
-            = new DictNode[]
+        static readonly DictionaryTree testDictTreeLowerCase
+            = new DictionaryTree( new DictNode[]
                 {
                     new DictNode
                     (
@@ -122,7 +122,7 @@ namespace BoggleTests
                             )
                         }
                     )
-                };
+                });
 
         #endregion
 
@@ -136,8 +136,8 @@ namespace BoggleTests
                 ['c'] = 1
         };
 
-        static readonly DictNode[] testDictTreeMixedCase
-            = new DictNode[]
+        static readonly DictionaryTree testDictTreeMixedCase
+            = new DictionaryTree( new DictNode[]
                 {
                     new DictNode
                     (
@@ -203,7 +203,7 @@ namespace BoggleTests
                             )
                         }
                     )
-                };
+                });
         #endregion
 
         [TestMethod]
@@ -232,8 +232,7 @@ namespace BoggleTests
             DictionaryTree d = new DictionaryTree(basicDict, testTileInfoMixedCase, true);
 
             // Check to see if dictionaries are equal
-            throw new NotImplementedException();
-            //Assert.AreEqual(d.Root, testDictTreeMixedCase);
+            Assert.AreEqual(d, testDictTreeMixedCase);
         }
 
         [TestMethod]
@@ -243,8 +242,7 @@ namespace BoggleTests
             DictionaryTree d = new DictionaryTree(basicDict, testTileInfoLowerCase, true);
 
             // Check to see if dictionaries are equal
-            throw new NotImplementedException();
-            //Assert.AreEqual(d.Root, testDictTreeLowerCase);
+            Assert.AreEqual(d, testDictTreeLowerCase);
         }
     }
 }
