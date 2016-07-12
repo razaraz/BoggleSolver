@@ -21,6 +21,18 @@ This script performs the following actions:
   FILL ME IN!!!!!!!!!!!!!!!!!!!!!
   !!!!!!!!!!!!!!!!!!!!!!!!!
 
+--- Improvement opportunities ---
+  - Make dictionary loading asynchronous
+  - Make more efficient use of resources when loading dictionaries
+  - Traverse dictionary tree in parallel asynchronously
+  - Mark duplicates before adding
+  - Read dictionary by blocks rather than line
+  XXXXXXXX
+  - CHECK !Cache neighbor and children position maps maybe??
+  - CHECK Save another tree backwards maybe to retrace
+    a path we already took 
+  XXXXXXXX
+
 --- Unit Tests ---
 
   FILL ME IN!!!!!!!!!!!!!!!!!!!!!
