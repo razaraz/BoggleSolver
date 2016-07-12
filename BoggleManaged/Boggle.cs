@@ -47,7 +47,7 @@ namespace BoggleManaged
 
             CalculateNeighbors();
 
-            characterTileLocations = board.ToDictionary(l => l, l => 0UL);
+            characterTileLocations = board.Distinct().ToDictionary(l => l, l => 0UL);
             for(int i = 0; i < board.Length; ++i)
             {
                 characterTileLocations[board[i]] |= (1UL << i);
@@ -79,7 +79,7 @@ namespace BoggleManaged
             // Traverse the dictionary nodes, and resolve if the words are present in the board
             TreeVisitor visitor = new TreeVisitor(this, dict, minWordLength, caseSensitive);
 
-            return visitor.VisitTree();
+            return visitor.VisitTree().Distinct();
         }
 
         #endregion

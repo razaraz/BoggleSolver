@@ -227,6 +227,7 @@ namespace BoggleTests
         static readonly string[] testBasicDictionaryWords;
 
         [TestMethod]
+        [DeploymentItem(basicDict, "Dictionaries")]
         public void DictionaryReadBasicDictionary()
         {
             DictionaryTree d = new DictionaryTree(basicDict, testTileInfoMixedCase, true);
@@ -236,6 +237,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [DeploymentItem(basicDict, "Dictionaries")]
         public void DictionaryCaseInsensitive()
         {
             throw new NotImplementedException();

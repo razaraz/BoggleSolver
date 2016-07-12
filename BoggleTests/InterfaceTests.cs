@@ -17,9 +17,10 @@ namespace BoggleTests
     [TestClass]
     public class InterfaceTests
     {
-        private static string minimalDict = "Dictionaries\\MinimalDict.txt";
+        private const string minimalDict = "Dictionaries\\MinimalDict.txt";
 
         [TestMethod]
+        [DeploymentItem(minimalDict, "Dictionaries")]
         public void EmptyBoard()
         {
             Boggle b = new Boggle(0, 0, new char[]{ });
@@ -44,6 +45,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [DeploymentItem(minimalDict, "Dictionaries")]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "The minimum word length is greater than the total size of the board.")]
         public void MinWordLengthTooLong()
         {

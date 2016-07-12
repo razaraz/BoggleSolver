@@ -66,7 +66,11 @@ namespace BoggleTests
         //
         #endregion
 
+        private const string minimalDict = "Dictionaries\\MinimalDict.txt";
+        private const string unicodeDict = "Dictionaries\\UnicodeDict.txt";
+
         [TestMethod]
+        [DeploymentItem(minimalDict,"Dictionaries")]
         public void ThreeByThreeBoard()
         {
             char[] board = {
@@ -90,9 +94,9 @@ namespace BoggleTests
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
 
-        private static string minimalDict = "Dictionaries\\MinimalDict.txt";
         
         [TestMethod]
+        [DeploymentItem(unicodeDict,"Dictionaries")]
         public void UnicodeBoard()
         {
             char[] board = {
@@ -105,12 +109,13 @@ namespace BoggleTests
 
             Boggle b = new Boggle(boardWidth, boardHeight, board);
 
-            var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
+            var testSolutions = from solution in b.Solve(unicodeDict, 3) orderby solution ascending select solution;
 
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
 
         [TestMethod]
+        [DeploymentItem(minimalDict,"Dictionaries")]
         public void Duplicates()
         {
             char[] board = {
@@ -119,7 +124,7 @@ namespace BoggleTests
             const uint boardWidth = 2;
             const uint boardHeight = 2;
             string[] solutions = {
-                "arm", "ram", "raam",};
+                "arm", "raam", "ram",};
 
             Boggle b = new Boggle(boardWidth, boardHeight, board);
 
@@ -148,6 +153,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [DeploymentItem(minimalDict,"Dictionaries")]
         public void MinimalBoard()
         {
             char[] board = {
@@ -179,6 +185,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [DeploymentItem(minimalDict,"Dictionaries")]
         public void CaseInsensitiveSensitiveMinimalBoard()
         {
             char[] board = {
@@ -197,6 +204,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [DeploymentItem(minimalDict,"Dictionaries")]
         public void CaseSensitiveMinimalBoard()
         {
             char[] board = {

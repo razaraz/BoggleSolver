@@ -1,4 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<OrderedTest xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" id="cce56818-7f98-43cb-b251-be0c1edd49dc" name="OrderedTest1">
-	
+<OrderedTest name="OrderedTest1" storage="z:\src\boggle\boggletests\orderedtest1.orderedtest" id="cce56818-7f98-43cb-b251-be0c1edd49dc" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestLinks>
+    <TestLink id="9a1fe940-2bdc-2d1c-482a-081ab9f3fba7" name="DictionaryFileDoesNotExist" storage="bin\debug\boggletests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="c682a5cd-d4ed-2661-dead-056be39daba0" name="NullBoard" storage="bin\debug\boggletests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="a8c278a6-9aaa-808a-869a-19ae2525cbe4" name="EmptyBoard" storage="bin\debug\boggletests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestLinks>
 </OrderedTest>
