@@ -25,6 +25,7 @@ namespace BoggleTests
             Boggle b = new Boggle(0, 0, new char[]{ });
             IEnumerable<string> solutions = b.Solve(minimalDict, 0);
 
+            Assert.IsNotNull(solutions);
             Assert.AreEqual(solutions.Count(), 0);
         }
 

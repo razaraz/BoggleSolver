@@ -90,7 +90,7 @@ namespace BoggleTests
             Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
 
-        private static string minimalDict = "MinimalDict.txt";
+        private static string minimalDict = "Dictionaries\\MinimalDict.txt";
         
         [TestMethod]
         public void UnicodeBoard()
@@ -129,6 +129,25 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        public void NeighborsCalculatedProperly()
+        {
+            char[] board = {
+                'y', 'o', 'x',
+                'r', 'b', 'a',
+                'v', 'e', 'd' };
+
+            UInt64[] Neighbors = {
+                0x1A,   0x3D,   0x32,
+                0xD3,   0x1EF,  0x196,
+                0x98,   0x178,  0xB0
+                };
+
+            Boggle b = new Boggle(3, 3, board);
+
+            Assert.IsTrue(Neighbors.SequenceEqual(b.NeighborArray));
+        }
+
+        [TestMethod]
         public void MinimalBoard()
         {
             char[] board = {
@@ -143,7 +162,8 @@ namespace BoggleTests
 
             var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+            Assert.AreNotEqual(testSolutions.Count(), 0);
+            Assert.IsTrue(testSolutions.SequenceEqual(solutions), String.Format("Result: {0}\nExpected: {1}", testSolutions.Aggregate((curr, next) => curr + ", " + next), solutions.Aggregate((curr, next) => curr + ", " + next)));
         }
 
         [TestMethod]

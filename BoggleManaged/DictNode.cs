@@ -48,13 +48,18 @@ namespace BoggleManaged
             sb.Append(Letter);
             sb.Append("'\n");
             sb.Append(' ', indent * 2);
-            sb.Append('\'');
-            sb.Append(Word);
-            sb.Append("\"\n");
+            if (Word != null)
+            {
+                sb.Append('"');
+                sb.Append(Word);
+                sb.Append("\"\n");
+            }
+            else
+                sb.Append("<null>\n");
 
             if(Children == null)
             {
-                sb.Append("null\n");
+                sb.Append("<null>\n");
             }
             else
                 foreach (var child in Children)

@@ -47,10 +47,10 @@ namespace BoggleManaged
 
             CalculateNeighbors();
 
-            characterTileLocations = new Dictionary<char, UInt64>();
+            characterTileLocations = board.ToDictionary(l => l, l => 0UL);
             for(int i = 0; i < board.Length; ++i)
             {
-                characterTileLocations[board[i]] &= (1UL << i);
+                characterTileLocations[board[i]] |= (1UL << i);
             }
         }
 
@@ -182,6 +182,8 @@ namespace BoggleManaged
 
         private IDictionary<char, UInt64> characterTileLocations;
 
+        internal UInt64[] NeighborArray { get { return neighborArray; } }
+
         /// <summary>
         /// Array that contains the precalculated neighbors for each tile by index.
         /// </summary>
@@ -212,20 +214,25 @@ namespace BoggleManaged
                 if(!onRightColumn)  { rowMask |= 4; }
 
                 // Set the neighboring bits on the same row
-                neighborArray[i] |= rowMask << (i - 1);
+                neighborArray[i] |= SignedShiftLeft(rowMask, i - 1);
 
                 // Add the middle tile for the rows above and below
                 rowMask |= 2;
 
                 if(!onTopRow)
                 {
-                    neighborArray[i] |= rowMask << (i - (int)Width - 1);
+                    neighborArray[i] |= SignedShiftLeft(rowMask, i - (int)Width - 1);
                 }
                 if(!onBottomRow)
                 {
                     neighborArray[i] |= rowMask << (i + (int)Width - 1);
                 }
             }
+        }
+
+        private UInt64 SignedShiftLeft(UInt64 mask, int shift)
+        {
+            return shift >= 0 ? (mask << shift) : (mask >> -shift) ;
         }
 
         /// <summary>
