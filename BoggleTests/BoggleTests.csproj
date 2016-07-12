@@ -73,6 +73,9 @@
     <Content Include="Dictionaries\MinimalDict.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Dictionaries\words.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="OrderedTest1.orderedtest">

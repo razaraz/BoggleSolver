@@ -10,11 +10,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F785A554-B739-4490-ACB0-3FE964A8DEB9}"
 	ProjectSection(SolutionItems) = preProject
 		Local.testsettings = Local.testsettings
+		Performance1.psess = Performance1.psess
 		README.txt = README.txt
 		Run.ps1 = Run.ps1
 	EndProjectSection
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64

@@ -27,6 +27,7 @@ This script performs the following actions:
   - Traverse dictionary tree in parallel asynchronously
   - Mark duplicates before adding
   - Read dictionary by blocks rather than line
+  - Assume dictionaries are sorted, and traverse the tree along with reading the words
   XXXXXXXX
   - CHECK !Cache neighbor and children position maps maybe??
   - CHECK Save another tree backwards maybe to retrace

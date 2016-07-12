@@ -66,8 +66,11 @@ namespace BoggleManaged
 
         private bool ShouldLineBeProcessed(string line)
         {
+            if (String.IsNullOrWhiteSpace(line))
+                return false;
+
             bool Process = true;
-            Dictionary<char, uint> tileOcurrances = new Dictionary<char, uint>(CharacterOccurrances);
+            IDictionary<char, uint> tileOcurrances = new SortedList<char, uint>(CharacterOccurrances);
 
             foreach(char c in line)
             {
