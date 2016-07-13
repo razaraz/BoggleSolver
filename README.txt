@@ -29,6 +29,8 @@ This script performs the following actions:
   - Read dictionary by blocks rather than line
   - Assume dictionaries are sorted, and traverse the tree along with reading the words
   XXXXXXXX
+  - CHECK Implementation of comparisons and letter occurrances in DictionaryTree
+  - CHECK can write my own binary search by hand
   - CHECK !Cache neighbor and children position maps maybe??
   - CHECK Save another tree backwards maybe to retrace
     a path we already took 

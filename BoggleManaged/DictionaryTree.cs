@@ -21,10 +21,16 @@ namespace BoggleManaged
     internal class DictionaryTree
     {
         #region Public Interface
-        public DictionaryTree(string file, IDictionary<char, uint> characterOcurrances, bool caseSensitive = true)
+        public DictionaryTree(string file, IDictionary<char, uint> characterOcurrances, uint minWordLength = 1, bool caseSensitive = true)
         {
-            this.CharacterOccurrances = characterOcurrances;
+            characterOccurrances = (from character in characterOcurrances
+                                    orderby character.Key
+                                    select new TileInfo { Char = character.Key, Num = character.Value}).ToArray();
+            tileOccurrances = new TileInfo[characterOccurrances.Length];
+
             this.CaseSensitive = caseSensitive;
+            this.MinimumWordLength = minWordLength;
+            this.MaximumWordLength = characterOcurrances.Aggregate(0U, (count, next) => count + next.Value);
 
             GenerateDictTree(file);
         }
@@ -36,16 +42,36 @@ namespace BoggleManaged
 
         public IEnumerable<DictNode> RootNodes { get { return rootNodes.Values; } }
         public bool CaseSensitive { get; private set; }
+        public uint MinimumWordLength { get; private set; }
+        public uint MaximumWordLength { get; private set; }
         #endregion
 
         #region Private Implementation
-        private readonly IDictionary<char, uint> CharacterOccurrances;
+        private struct TileInfo 
+        {
+            public uint Char;
+            public uint Num;
+        }
+        private readonly TileInfo[] characterOccurrances;
+        private TileInfo[] tileOccurrances;
+        
+        /*
+        private class TileComparer : IComparer<Tuple<char, uint>>
+        {
+            int Compare(Tuple<char, uint> t)
+            {
+                return t.Item1
+            }
+        }
+
+        private static IComparer<Tuple<char, uint>> tileComparer;
+        */
 
         private SortedList<char, DictNode> rootNodes;
 
         private void GenerateDictTree(string file)
         {
-            rootNodes = new SortedList<char, DictNode>(CharacterOccurrances.Count);
+            rootNodes = new SortedList<char, DictNode>(characterOccurrances.Length);
 
             using (StreamReader dictStream = new StreamReader(file))
             {
@@ -64,18 +90,53 @@ namespace BoggleManaged
             }
         }
 
+        private int BinarySearch(TileInfo[] array, char c)
+        {
+            if (array == null || array.Length == 0)
+                return -1;
+
+            uint intChar = (uint)c;
+            int start = 0;
+            int idx = 0;
+            int range = array.Length;
+
+            while(range > 1 && array[idx].Char != intChar)
+            {
+                idx = start + range / 2;
+
+                if(array[idx].Char < intChar)
+                {
+                    range = range / 2 + range % 2;
+                    start = idx;
+                }
+                else
+                {
+                    range = idx - start;
+                }
+            }
+
+            System.Diagnostics.Debug.Assert(idx < array.Length);
+
+            return array[idx].Char == intChar ? idx : -1;
+        }
+
         private bool ShouldLineBeProcessed(string line)
         {
-            if (String.IsNullOrWhiteSpace(line))
+            if (String.IsNullOrWhiteSpace(line) ||
+                line.Length < MinimumWordLength ||
+                line.Length > MaximumWordLength)
+            {
                 return false;
+            }
 
             bool Process = true;
-            IDictionary<char, uint> tileOcurrances = new SortedList<char, uint>(CharacterOccurrances);
+            Array.Copy(characterOccurrances, tileOccurrances, characterOccurrances.Length);
 
             foreach(char c in line)
             {
-                if(!tileOcurrances.ContainsKey(c)
-                    || tileOcurrances[c]-- == 0)
+                int idx = BinarySearch(tileOccurrances, c);
+                if (idx < 0
+                    || tileOccurrances[idx].Num-- == 0)
                 {
                     Process = false;
                     break;

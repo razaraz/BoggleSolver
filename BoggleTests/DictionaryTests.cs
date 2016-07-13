@@ -230,7 +230,7 @@ namespace BoggleTests
         [DeploymentItem(basicDict, "Dictionaries")]
         public void DictionaryReadBasicDictionary()
         {
-            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoMixedCase, true);
+            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoMixedCase, 1, true);
 
             // Check to see if dictionaries are equal
             Assert.AreEqual(d, testDictTreeMixedCase);
@@ -241,7 +241,7 @@ namespace BoggleTests
         public void DictionaryCaseInsensitive()
         {
             throw new NotImplementedException();
-            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoLowerCase, true);
+            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoLowerCase, 1, false);
 
             // Check to see if dictionaries are equal
             Assert.AreEqual(d, testDictTreeLowerCase);

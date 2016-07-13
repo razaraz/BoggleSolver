@@ -53,7 +53,18 @@ namespace BoggleTests
         [DeploymentItem(largeDictionary, "Dictionaries")]
         public void LoadLargeDictionary()
         {
-            DictionaryTree d = new DictionaryTree(largeDictionary, testTileInfoLargeSet, true);
+            DictionaryTree d = new DictionaryTree(largeDictionary, testTileInfoLargeSet, 1, false);
+
+            foreach (DictNode n in d.RootNodes)
+                Assert.IsNotNull(n);
+        }
+
+        [TestMethod]
+        [TestCategory("Performance")]
+        public void SolveLargeBoard()
+        {
+            // Maybe run the tree first, then save it in the testcontext, and then solve a large board?
+            throw new NotImplementedException();
         }
     }
 }

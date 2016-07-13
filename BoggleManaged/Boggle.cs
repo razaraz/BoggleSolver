@@ -74,7 +74,7 @@ namespace BoggleManaged
             }
 
             // Open the dictionary
-            DictionaryTree dict = new DictionaryTree(dictFile, tileCharacterOccurrances, caseSensitive);
+            DictionaryTree dict = new DictionaryTree(dictFile, tileCharacterOccurrances, minWordLength, caseSensitive);
 
             // Traverse the dictionary nodes, and resolve if the words are present in the board
             TreeVisitor visitor = new TreeVisitor(this, dict, minWordLength, caseSensitive);
