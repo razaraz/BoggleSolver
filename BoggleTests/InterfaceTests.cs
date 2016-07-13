@@ -20,6 +20,7 @@ namespace BoggleTests
         private const string minimalDict = "Dictionaries\\MinimalDict.txt";
 
         [TestMethod]
+        [TestCategory("Interface")]
         [DeploymentItem(minimalDict, "Dictionaries")]
         public void EmptyBoard()
         {
@@ -31,6 +32,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Width and Height do not match the board size.")]
         public void WrongBoardDimentions()
         {
@@ -38,6 +40,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Boards larger than 64 spaces are not supported.")]
         public void BoardTooBig()
         {
@@ -45,6 +48,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [TestCategory("Interface")]
         [DeploymentItem(minimalDict, "Dictionaries")]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "The minimum word length is greater than the total size of the board.")]
         public void MinWordLengthTooLong()
@@ -55,6 +59,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void NullBoard()
         {
@@ -63,6 +68,7 @@ namespace BoggleTests
 
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(System.IO.FileNotFoundException), "Could not open the dictionary file.")]
         public void DictionaryDoesNotExist()
         {

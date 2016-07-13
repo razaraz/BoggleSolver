@@ -47,10 +47,12 @@ namespace BoggleManaged
 
             CalculateNeighbors();
 
-            characterTileLocations = board.Distinct().ToDictionary(l => l, l => 0UL);
+            characterTileLocationsCaseSensitive = board.Distinct().ToDictionary(l => l, l => 0UL);
+            characterTileLocationsCaseInsensitive = board.Distinct().GroupBy(l => Char.ToLowerInvariant(l)).ToDictionary(l => Char.ToLowerInvariant(l.Key), l => 0UL);
             for(int i = 0; i < board.Length; ++i)
             {
-                characterTileLocations[board[i]] |= (1UL << i);
+                characterTileLocationsCaseSensitive[board[i]] |= (1UL << i);
+                characterTileLocationsCaseInsensitive[Char.ToLowerInvariant(board[i])] |= (1UL << i);
             }
         }
 
@@ -95,6 +97,9 @@ namespace BoggleManaged
                 this.caseSensitive = caseSensitive;
                 this.results = new List<string>();
                 this.bitfieldArrays = new List<int[]>((int)(board.Width * board.Height + 1));
+
+                this.tileLocationMap = caseSensitive ? board.characterTileLocationsCaseSensitive
+                                                     : board.characterTileLocationsCaseInsensitive;
             }
 
             public IEnumerable<string> Results { get { return results; } }
@@ -159,7 +164,7 @@ namespace BoggleManaged
                 if (prevPosition.HasValue)
                     availableTiles &= board.neighborArray[prevPosition.Value];
 
-                availableTiles &= board.characterTileLocations[letter];
+                availableTiles &= tileLocationMap[letter];
 
                 return BitfieldToIntArray(availableTiles);
             }
@@ -170,17 +175,6 @@ namespace BoggleManaged
                     bitfieldArrays.Add(new int[board.Width * board.Height]);
 
                 int[] bitfieldArray = bitfieldArrays[currBitfieldArray++];
-                /*
-                uint[] tiles = null;
-
-                int available = 0;
-
-                for(int i = 0; (bitfield >> i) != 0; ++i)
-                {
-                    if (((bitfield >> i) & 1) != 0)
-                        ++available;
-                }
-                */
 
                 int curr = 0;
                 for(int i = 0; i < 64 && (bitfield >> i) != 0; ++i)
@@ -201,9 +195,11 @@ namespace BoggleManaged
             private Boggle board;
             private DictionaryTree dict;
             private bool caseSensitive;
+            private IDictionary<char, UInt64> tileLocationMap;
         }
 
-        private IDictionary<char, UInt64> characterTileLocations;
+        private IDictionary<char, UInt64> characterTileLocationsCaseSensitive;
+        private IDictionary<char, UInt64> characterTileLocationsCaseInsensitive;
 
         internal UInt64[] NeighborArray { get { return neighborArray; } }
 

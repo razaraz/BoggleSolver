@@ -93,7 +93,7 @@ namespace BoggleTests
         [TestMethod]
         [TestCategory("Performance")]
         [DeploymentItem(largeDictionary,"Dictionaries")]
-        [Timeout(1000)]
+        [Timeout(10 * 1000)]
         public void SolveMaxSizeBoardWithLargeDictionary()
         {
             char[] board = {

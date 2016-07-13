@@ -118,7 +118,15 @@ namespace BoggleTests
                             (
                                 'a',
                                 "ba",
-                                null
+                                new DictNode[]
+                                {
+                                    new DictNode
+                                    (
+                                        'a',
+                                        "baa",
+                                        null
+                                    )
+                                }
                             )
                         }
                     )
@@ -223,8 +231,6 @@ namespace BoggleTests
 
             DictionaryTree d = new DictionaryTree(malformedDictionary, testTileInfoLowerCase);
         }
-
-        static readonly string[] testBasicDictionaryWords;
 
         [TestMethod]
         [DeploymentItem(basicDict, "Dictionaries")]

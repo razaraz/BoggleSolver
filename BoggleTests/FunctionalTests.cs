@@ -94,7 +94,7 @@ namespace BoggleTests
 
             var testSolutions = from solution in b.Solve(englishDictionary2, 4) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions.OrderBy(s => s)), String.Format("Result: {0}\nExpected: {1}", testSolutions.Aggregate((curr, next) => curr + ", " + next), solutions.OrderBy(s => s).Aggregate((curr, next) => curr + ", " + next)));
+            Helpers.AssertEnumeratorsAreEqual(solutions.OrderBy(s => s), testSolutions, "Solver failed to solve a board with complexity above minimum.");
         }
 
         
@@ -114,7 +114,7 @@ namespace BoggleTests
 
             var testSolutions = from solution in b.Solve(unicodeDict, 3) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "Solver failed to solve a board with unicode characters.");
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace BoggleTests
 
             var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "Solver failed to properly dispose of duplicates.");
         }
 
         [TestMethod]
@@ -144,7 +144,7 @@ namespace BoggleTests
                 'r', 'b', 'a',
                 'v', 'e', 'd' };
 
-            UInt64[] Neighbors = {
+            UInt64[] solutions = {
                 0x1A,   0x3D,   0x32,
                 0xD3,   0x1EF,  0x196,
                 0x98,   0x178,  0xB0
@@ -152,7 +152,7 @@ namespace BoggleTests
 
             Boggle b = new Boggle(3, 3, board);
 
-            Assert.IsTrue(Neighbors.SequenceEqual(b.NeighborArray));
+            Helpers.AssertEnumeratorsAreEqual(solutions.Select(s => s.ToString("X")), b.NeighborArray.Select(s => s.ToString("X")), "Solver did not calculate the arrays for finding the neigbors properly.");
         }
 
         [TestMethod]
@@ -171,8 +171,7 @@ namespace BoggleTests
 
             var testSolutions = from solution in b.Solve(minimalDict, 3) orderby solution ascending select solution;
 
-            Assert.AreNotEqual(testSolutions.Count(), 0);
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions), String.Format("Result: {0}\nExpected: {1}", testSolutions.Aggregate((curr, next) => curr + ", " + next), solutions.Aggregate((curr, next) => curr + ", " + next)));
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "Solver did not find the expected solutions for the simplest case board.");
         }
 
         [TestMethod]
@@ -197,13 +196,13 @@ namespace BoggleTests
             const uint boardWidth = 2;
             const uint boardHeight = 2;
             string[] solutions = {
-                "mat", "arm", "art", "mart", "ram", "rat", "tar", "tram" };
+                "arm", "art", "mart", "mat", "ram", "rat", "tar", "tram" };
 
             Boggle b = new Boggle(boardWidth, boardHeight, board);
 
             var testSolutions = from solution in b.Solve(minimalDict, 3, false) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "Board was not solved properly for case insensitivity.");
         }
 
         [TestMethod]
@@ -216,20 +215,13 @@ namespace BoggleTests
             const uint boardWidth = 2;
             const uint boardHeight = 2;
             string[] solutions = {
-                "Mat", "art", "rat", "tar"};
+                "art", "Mat", "rat", "tar"};
 
             Boggle b = new Boggle(boardWidth, boardHeight, board);
 
             var testSolutions = from solution in b.Solve(minimalDict, 3, true) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
-        }
-
-
-        [TestMethod]
-        public void DuplicateWordPaths()
-        {
-            throw new NotImplementedException();
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "Board was not solved properly for case sensitivity.");
         }
     }
 }
