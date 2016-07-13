@@ -219,7 +219,7 @@ namespace BoggleTests
         [ExpectedException(typeof(System.IO.InvalidDataException), "The dictionary is not formatted in a proper format.")]
         public void DictionaryFileMalformed()
         {
-            string malformedDictionary = "Dictionaries\\MalformedDict.txt";
+            string malformedDictionary = "BoggleTests.dll";
 
             DictionaryTree d = new DictionaryTree(malformedDictionary, testTileInfoLowerCase);
         }

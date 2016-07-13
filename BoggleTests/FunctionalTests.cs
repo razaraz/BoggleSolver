@@ -71,7 +71,7 @@ namespace BoggleTests
         const string englishDictionary2 = "Dictionaries\\EnglishDictionary2.txt";
 
         [TestMethod]
-        [DeploymentItem(englishDictionary2,"Dictionaries")]
+        [DeploymentItem(englishDictionary2, "Dictionaries")]
         public void ThreeByThreeBoard()
         {
             char[] board = {
@@ -94,7 +94,7 @@ namespace BoggleTests
 
             var testSolutions = from solution in b.Solve(englishDictionary2, 4) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions.OrderBy(s => s)));
+            Assert.IsTrue(testSolutions.SequenceEqual(solutions.OrderBy(s => s)), String.Format("Result: {0}\nExpected: {1}", testSolutions.Aggregate((curr, next) => curr + ", " + next), solutions.OrderBy(s => s).Aggregate((curr, next) => curr + ", " + next)));
         }
 
         

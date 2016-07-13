@@ -138,6 +138,9 @@ namespace BoggleManaged
 
             foreach(char c in line)
             {
+                if (System.Char.IsControl(c))
+                    throw new System.IO.InvalidDataException("Dictionary is not allowed to contain control characters");
+
                 int idx = BinarySearch(tileOccurrances, c);
                 if (idx < 0
                     || tileOccurrances[idx].Num-- == 0)

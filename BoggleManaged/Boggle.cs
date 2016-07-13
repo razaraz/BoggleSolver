@@ -77,7 +77,7 @@ namespace BoggleManaged
             DictionaryTree dict = new DictionaryTree(dictFile, tileCharacterOccurrances, minWordLength, caseSensitive);
 
             // Traverse the dictionary nodes, and resolve if the words are present in the board
-            TreeVisitor visitor = new TreeVisitor(this, dict, minWordLength, caseSensitive);
+            TreeVisitor visitor = new TreeVisitor(this, dict, caseSensitive);
 
             return visitor.VisitTree();
         }
@@ -88,13 +88,13 @@ namespace BoggleManaged
 
         private class TreeVisitor
         {
-            public TreeVisitor(Boggle board, DictionaryTree dict, uint minWordLength, bool caseSensitive)
+            public TreeVisitor(Boggle board, DictionaryTree dict, bool caseSensitive)
             {
                 this.board = board;
                 this.dict = dict;
                 this.caseSensitive = caseSensitive;
                 this.results = new List<string>();
-                this.minWordLength = minWordLength;
+                this.bitfieldArrays = new List<int[]>((int)(board.Width * board.Height + 1));
             }
 
             public IEnumerable<string> Results { get { return results; } }
@@ -103,21 +103,21 @@ namespace BoggleManaged
             {
                 foreach(var node in dict.RootNodes)
                 {
-                    TraverseNode(node, 1, null, UInt64.MaxValue);
+                    TraverseNode(node, null, UInt64.MaxValue);
                 }
                 return Results;
             }
 
-            private void TraverseNode(DictNode node, uint currDepth, uint? prevTile, UInt64 availableTiles)
+            private void TraverseNode(DictNode node, uint? prevTile, UInt64 availableTiles)
             {
                 System.Diagnostics.Debug.Assert(node != null);
                 System.Diagnostics.Debug.Assert(!node.IsEmpty);
 
-                uint[] tileCandidates = GetTileCandidates(prevTile, node.Letter, availableTiles);
+                int[] tileCandidates = GetTileCandidates(prevTile, node.Letter, availableTiles);
 
-                if (tileCandidates != null)
+                if (tileCandidates[0] != -1)
                 {
-                    if (node.HasWord && currDepth >= minWordLength)
+                    if (node.HasWord)
                     {
                         results.Add(node.Word);
                         node.Word = null;
@@ -125,28 +125,36 @@ namespace BoggleManaged
 
                     if (node.HasChildren)
                     {
-                        // Explore each of the tile candidate positions as a possible
-                        // path to continue matching words down the tree
-                        foreach (uint tilePos in tileCandidates)
-                        {
-                            UInt64 newAvailableTiles = availableTiles ^ (1UL << (int)tilePos);
-                            foreach (DictNode child in node)
-                            {
-                                TraverseNode(child, currDepth + 1, tilePos, newAvailableTiles);
+                        TraverseNodeChildren(node, tileCandidates, availableTiles);
+                    }
 
-                                if (child.IsEmpty)
-                                {
-                                    node.RemoveChild(child.Letter);
-                                    if (!node.HasChildren)
-                                        return;
-                                }
-                            }
+                    --currBitfieldArray;
+                }
+            }
+
+            private void TraverseNodeChildren(DictNode node, int[] tileCandidates, UInt64 availableTiles)
+            {
+                // Explore each of the tile candidate positions as a possible
+                // path to continue matching words down the tree
+                for(int i = 0; i < tileCandidates.Length && tileCandidates[i] >= 0; ++i)
+                {
+                    int tilePos = tileCandidates[i];
+                    UInt64 newAvailableTiles = availableTiles ^ (1UL << (int)tilePos);
+                    foreach (DictNode child in node)
+                    {
+                        TraverseNode(child, (uint)tilePos, newAvailableTiles);
+
+                        if (child.IsEmpty)
+                        {
+                            node.RemoveChild(child.Letter);
+                            if (!node.HasChildren)
+                                return;
                         }
                     }
                 }
             }
 
-            private uint[] GetTileCandidates(uint? prevPosition, char letter, UInt64 availableTiles)
+            private int[] GetTileCandidates(uint? prevPosition, char letter, UInt64 availableTiles)
             {
                 if (prevPosition.HasValue)
                     availableTiles &= board.neighborArray[prevPosition.Value];
@@ -156,12 +164,15 @@ namespace BoggleManaged
                 return BitfieldToIntArray(availableTiles);
             }
 
-            private uint[] BitfieldToIntArray(UInt64 bitfield)
+            private int[] BitfieldToIntArray(UInt64 bitfield)
             {
-                if (bitfield == 0)
-                    return null;
+                if (bitfieldArrays.Count <= currBitfieldArray)
+                    bitfieldArrays.Add(new int[board.Width * board.Height + 1]);
 
+                int[] bitfieldArray = bitfieldArrays[currBitfieldArray++];
+                /*
                 uint[] tiles = null;
+
                 int available = 0;
 
                 for(int i = 0; (bitfield >> i) != 0; ++i)
@@ -169,25 +180,27 @@ namespace BoggleManaged
                     if (((bitfield >> i) & 1) != 0)
                         ++available;
                 }
-
-                tiles = new uint[available];
+                */
 
                 int curr = 0;
                 for(int i = 0; (bitfield >> i) != 0; ++i)
                 {
                     if (((bitfield >> i) & 1) != 0)
-                        tiles[curr++] = (uint)i;
+                        bitfieldArray[curr++] = i;
                 }
 
-                return tiles;
+                bitfieldArray[curr] = -1;
+
+                return bitfieldArray;
             }
 
 
+            private int currBitfieldArray;
+            private List<int[]> bitfieldArrays;
             private List<string> results;
             private Boggle board;
             private DictionaryTree dict;
             private bool caseSensitive;
-            private uint minWordLength;
         }
 
         private IDictionary<char, UInt64> characterTileLocations;
