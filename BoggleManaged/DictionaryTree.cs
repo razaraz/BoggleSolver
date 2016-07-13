@@ -21,16 +21,19 @@ namespace BoggleManaged
     internal class DictionaryTree
     {
         #region Public Interface
-        public DictionaryTree(string file, IDictionary<char, uint> characterOcurrances, uint minWordLength = 1, bool caseSensitive = true)
+        public DictionaryTree(string file, IEnumerable<KeyValuePair<char, uint>> characterOccurrances, uint minWordLength = 1, bool caseSensitive = true)
         {
-            characterOccurrances = (from character in characterOcurrances
-                                    orderby character.Key
-                                    select new TileInfo { Char = character.Key, Num = character.Value}).ToArray();
-            tileOccurrances = new TileInfo[characterOccurrances.Length];
+            if (!caseSensitive)
+                characterOccurrances = characterOccurrances.Select(kv => new KeyValuePair<char, uint>(Char.ToLowerInvariant(kv.Key), kv.Value));
+
+            this.characterOccurrances = (from character in characterOccurrances
+                                        orderby character.Key
+                                        select new TileInfo { Char = character.Key, Num = character.Value}).ToArray();
+            tileOccurrances = new TileInfo[this.characterOccurrances.Length];
 
             this.CaseSensitive = caseSensitive;
             this.MinimumWordLength = minWordLength;
-            this.MaximumWordLength = characterOcurrances.Aggregate(0U, (count, next) => count + next.Value);
+            this.MaximumWordLength = characterOccurrances.Aggregate(0U, (count, next) => count + next.Value);
 
             GenerateDictTree(file);
         }
@@ -81,6 +84,9 @@ namespace BoggleManaged
                 while(!dictStream.EndOfStream)
                 {
                     nextLine = dictStream.ReadLine();
+
+                    if (!CaseSensitive)
+                        nextLine = nextLine.ToLowerInvariant();
 
                     // Filter
                     if(ShouldLineBeProcessed(nextLine))
