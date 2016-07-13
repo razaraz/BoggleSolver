@@ -127,9 +127,9 @@ namespace BoggleManaged
                     {
                         TraverseNodeChildren(node, tileCandidates, availableTiles);
                     }
-
-                    --currBitfieldArray;
                 }
+
+                --currBitfieldArray;
             }
 
             private void TraverseNodeChildren(DictNode node, int[] tileCandidates, UInt64 availableTiles)
@@ -167,7 +167,7 @@ namespace BoggleManaged
             private int[] BitfieldToIntArray(UInt64 bitfield)
             {
                 if (bitfieldArrays.Count <= currBitfieldArray)
-                    bitfieldArrays.Add(new int[board.Width * board.Height + 1]);
+                    bitfieldArrays.Add(new int[board.Width * board.Height]);
 
                 int[] bitfieldArray = bitfieldArrays[currBitfieldArray++];
                 /*
@@ -183,7 +183,7 @@ namespace BoggleManaged
                 */
 
                 int curr = 0;
-                for(int i = 0; (bitfield >> i) != 0; ++i)
+                for(int i = 0; i < 64 && (bitfield >> i) != 0; ++i)
                 {
                     if (((bitfield >> i) & 1) != 0)
                         bitfieldArray[curr++] = i;

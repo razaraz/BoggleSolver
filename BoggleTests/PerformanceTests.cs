@@ -87,7 +87,7 @@ namespace BoggleTests
             Boggle b = new Boggle(8, 8, board);
             var testSolutions = from solution in b.Solve(minimalDict, 1, true) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
+            Assert.IsTrue(testSolutions.SequenceEqual(solutions.OrderBy(s => s)), String.Format("Result: {0}\nExpected: {1}", testSolutions.Aggregate((curr, next) => curr + ", " + next), solutions.OrderBy(s => s).Aggregate((curr, next) => curr + ", " + next)));
         }
     }
 }
