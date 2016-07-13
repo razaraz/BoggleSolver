@@ -153,19 +153,8 @@ namespace BoggleManaged
              && Letter == rhs.Letter
              && Word == rhs.Word)
             {
-                if(children == null && rhs.children == null)
-                {
+                if (children != null && children.SequenceEqual(rhs.children) || children == null && rhs.children == null)
                     equal = true;
-                }
-                else if(children.Count == rhs.children.Count)
-                {
-                    foreach(var i in children)
-                    {
-                        if (!i.Value.Equals(rhs.children[i.Key]))
-                            return false;
-                    }
-                    equal = true;
-                }
             }
 
             return equal;
