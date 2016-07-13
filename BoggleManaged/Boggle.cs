@@ -79,7 +79,7 @@ namespace BoggleManaged
             // Traverse the dictionary nodes, and resolve if the words are present in the board
             TreeVisitor visitor = new TreeVisitor(this, dict, minWordLength, caseSensitive);
 
-            return visitor.VisitTree().Distinct();
+            return visitor.VisitTree();
         }
 
         #endregion
@@ -110,28 +110,38 @@ namespace BoggleManaged
 
             private void TraverseNode(DictNode node, uint currDepth, uint? prevTile, UInt64 availableTiles)
             {
+                System.Diagnostics.Debug.Assert(node != null);
+                System.Diagnostics.Debug.Assert(!node.IsEmpty);
+
                 uint[] tileCandidates = GetTileCandidates(prevTile, node.Letter, availableTiles);
 
-                if (tileCandidates == null)
-                    return;
-
-                if (node.Word != null
-                    && currDepth >= minWordLength)
+                if (tileCandidates != null)
                 {
-                    results.Add(node.Word);
-                }
-
-                if (node.Children == null)
-                    return;
-
-                // Explore each of the tile candidate positions as a possible
-                // path to continue matching words down the tree
-                foreach (uint tilePos in tileCandidates)
-                {
-                    UInt64 newAvailableTiles = availableTiles ^ (1UL << (int)tilePos);
-                    foreach (var child in node.Children)
+                    if (node.HasWord && currDepth >= minWordLength)
                     {
-                        TraverseNode(child.Value, currDepth + 1, tilePos, newAvailableTiles);
+                        results.Add(node.Word);
+                        node.Word = null;
+                    }
+
+                    if (node.HasChildren)
+                    {
+                        // Explore each of the tile candidate positions as a possible
+                        // path to continue matching words down the tree
+                        foreach (uint tilePos in tileCandidates)
+                        {
+                            UInt64 newAvailableTiles = availableTiles ^ (1UL << (int)tilePos);
+                            foreach (DictNode child in node)
+                            {
+                                TraverseNode(child, currDepth + 1, tilePos, newAvailableTiles);
+
+                                if (child.IsEmpty)
+                                {
+                                    node.RemoveChild(child.Letter);
+                                    if (!node.HasChildren)
+                                        return;
+                                }
+                            }
+                        }
                     }
                 }
             }

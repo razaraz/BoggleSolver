@@ -233,18 +233,30 @@ namespace BoggleTests
             DictionaryTree d = new DictionaryTree(basicDict, testTileInfoMixedCase, 1, true);
 
             // Check to see if dictionaries are equal
-            Assert.AreEqual(d, testDictTreeMixedCase);
+            Assert.AreEqual(testDictTreeMixedCase, d);
         }
 
         [TestMethod]
         [DeploymentItem(basicDict, "Dictionaries")]
         public void DictionaryCaseInsensitive()
         {
-            throw new NotImplementedException();
             DictionaryTree d = new DictionaryTree(basicDict, testTileInfoLowerCase, 1, false);
 
             // Check to see if dictionaries are equal
-            Assert.AreEqual(d, testDictTreeLowerCase);
+            Assert.AreEqual(testDictTreeLowerCase, d);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotSupportedException), "Only one DictNode Enumerator can be supported at this time")]
+        [DeploymentItem(basicDict, "Dictionaries")]
+        public void DictionaryCanOnlyHaveOneEnumarator()
+        {
+            DictionaryTree d = new DictionaryTree(basicDict, testTileInfoLowerCase, 1, false);
+
+            var e0 = d.RootNodes.GetEnumerator();
+            e0.MoveNext();
+            var e1 = e0.Current.GetEnumerator();
+            var e2 = e0.Current.GetEnumerator();
         }
     }
 }

@@ -6,6 +6,7 @@
 //              boggle board.
 ///////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,22 +17,94 @@ namespace BoggleManaged
     /// <summary>
     /// Represents a node in a dictionary tree.
     /// </summary>
-    internal class DictNode
+    internal class DictNode : IEnumerable<DictNode>
     {
-        public DictNode(char letter, string word, IEnumerable<DictNode> children = null)
+        public DictNode(char letter, string word, IEnumerable<DictNode> initialChildren = null)
         {
             Letter = letter;
             Word = word;
 
-            if (children != null)
-                Children = new SortedList<char, DictNode>(children.ToDictionary(x => x.Letter));
-            else
-                Children = new SortedList<char, DictNode>();
+            if(initialChildren != null)
+                children = new SortedList<char, DictNode>(initialChildren.ToDictionary(x => x.Letter));
+
+            childrenToRemove = new List<char>(1);
         }
 
         public char Letter;
+
+        /// <summary>
+        /// Contains a full string representation of a word found in the dictionary.
+        /// Once the word is found in the board, it is deleted from the node to avoid
+        /// duplicate work.
+        /// </summary>
         public string Word;
-        public SortedList<char, DictNode> Children;
+        public bool IsEmpty
+        {
+            get
+            {
+                return !HasWord && !HasChildren;
+            }
+        }
+        public bool HasWord
+        {
+            get
+            {
+                return Word != null;
+            }
+        }
+
+        public void SaveWord(string word)
+        {
+            SaveWordInternal(word, 0);
+        }
+        
+        private void SaveWordInternal(string word, int pos)
+        {
+            if (pos + 1 == word.Length)
+            {
+                Word = word;
+                return;
+            }
+
+            char nextChar = word[++pos];
+            DictNode childNode;
+
+            if(children == null || !children.ContainsKey(nextChar))
+            {
+                childNode = new DictNode(nextChar, null);
+                AddChild(nextChar, childNode);
+            }
+            else
+            {
+                childNode = children[nextChar];
+            }
+
+            childNode.SaveWordInternal(word, pos);
+        }
+
+        public void AddChild(char key, DictNode child)
+        {
+            if (children == null)
+                children = new SortedList<char, DictNode>();
+
+            System.Diagnostics.Debug.Assert(!children.ContainsKey(key));
+            children.Add(key, child);
+            ++childrenCount;
+        }
+
+        public void RemoveChild(char key)
+        {
+            childrenToRemove.Add(key);
+        }
+
+        public bool HasChildren
+        {
+            get
+            {
+                System.Diagnostics.Debug.Assert(children == null || (childrenCount > 0 && children.Count == childrenCount));
+                return childrenCount > 0;
+            }
+        }
 
         public override string ToString()
         {
@@ -40,6 +113,9 @@ namespace BoggleManaged
 
             return sb.ToString();
         }
+
+        private uint childrenCount;
+        private SortedList<char, DictNode> children;
 
         internal void ToStringIndented(StringBuilder sb, int indent)
         {
@@ -57,12 +133,13 @@ namespace BoggleManaged
             else
                 sb.Append("<null>\n");
 
-            if(Children == null)
+            if(children == null)
             {
+                sb.Append(' ', indent * 2);
                 sb.Append("<null>\n");
             }
             else
-                foreach (var child in Children)
+                foreach (var child in children)
                     child.Value.ToStringIndented(sb, indent + 1);
         }
 
@@ -76,15 +153,15 @@ namespace BoggleManaged
              && Letter == rhs.Letter
              && Word == rhs.Word)
             {
-                if(Children == null && rhs.Children == null)
+                if(children == null && rhs.children == null)
                 {
                     equal = true;
                 }
-                else if(Children.Count == rhs.Children.Count)
+                else if(children.Count == rhs.children.Count)
                 {
-                    foreach(var i in Children)
+                    foreach(var i in children)
                     {
-                        if (!i.Value.Equals(rhs.Children[i.Key]))
+                        if (!i.Value.Equals(rhs.children[i.Key]))
                             return false;
                     }
                     equal = true;
@@ -97,6 +174,100 @@ namespace BoggleManaged
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        private bool enumerating;
+        List<char> childrenToRemove;
+
+        private void RemoveChildren()
+        {
+            foreach (char c in childrenToRemove)
+            {
+                if (children.Remove(c))
+                    if (--childrenCount == 0)
+                        children = null;
+            }
+
+            childrenToRemove.Clear();
+        }
+
+        public class DictNodeEnumerator : IEnumerator<DictNode>
+        {
+            private DictNode dictNode;
+            private IEnumerator<KeyValuePair<char, DictNode>> enumerator;
+
+            public DictNodeEnumerator(DictNode dictNode)
+            {
+                this.dictNode = dictNode;
+                if(dictNode.children != null)
+                    enumerator = dictNode.children.GetEnumerator();
+            }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    return Current;
+                }
+            }
+
+            DictNode IEnumerator<DictNode>.Current
+            {
+                get
+                {
+                    return Current;
+                }
+            }
+
+            public DictNode Current
+            {
+                get
+                {
+                    return enumerator.Current.Value;
+                }
+            }
+
+            void IDisposable.Dispose()
+            {
+                dictNode.enumerating = false;
+                dictNode.RemoveChildren();
+            }
+            bool IEnumerator.MoveNext()
+            {
+                return MoveNext();
+            }
+
+            public bool MoveNext()
+            {
+                if (dictNode.childrenCount == 0 || enumerator == null)
+                    return false;
+
+                return enumerator.MoveNext();
+            }
+
+            void IEnumerator.Reset()
+            {
+                enumerator.Reset();
+            }
+        }
+
+        IEnumerator<DictNode> IEnumerable<DictNode>.GetEnumerator()
+        {
+            return (IEnumerator<DictNode>)GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator)GetEnumerator();
+        }
+
+        public DictNodeEnumerator GetEnumerator()
+        {
+            if (enumerating)
+                throw new NotSupportedException("Current implementation only allows one DictNodeEnumerator at a time");
+
+            enumerating = true;
+            return new DictNodeEnumerator(this);
         }
     }
 }

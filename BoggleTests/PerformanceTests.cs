@@ -5,6 +5,7 @@
 // Description: Tests that measure performance of the boggle solver.
 ///////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,24 +48,45 @@ namespace BoggleTests
                 ['y'] = 2,
                 ['z'] = 2
             };
+        const uint largeDictionaryWordCount = 273193U;
 
         [TestMethod]
         [TestCategory("Performance")]
         [DeploymentItem(largeDictionary, "Dictionaries")]
+        [Timeout(10 * 1000)]
         public void LoadLargeDictionary()
         {
             DictionaryTree d = new DictionaryTree(largeDictionary, testTileInfoLargeSet, 1, false);
 
-            foreach (DictNode n in d.RootNodes)
-                Assert.IsNotNull(n);
+            Assert.AreEqual(d.WordCount, largeDictionaryWordCount, "The dictionary did not read the expected ammount of words");
         }
+
+        const string minimalDict = "Dictionaries\\MinimalDict.txt";
 
         [TestMethod]
         [TestCategory("Performance")]
-        public void SolveLargeBoard()
+        [DeploymentItem(minimalDict,"Dictionaries")]
+        public void SolveMaxSizeBoardWithSmallDictionary()
         {
+            char[] board = {
+                't', 'M', 'm', 'm', 'M', 't', 't', 't',
+                't', 'm', 'r', 't', 'a', 'r', 'r', 'm',
+                'm', 'M', 'a', 't', 'a', 't', 'M', 't',
+                'M', 'r', 'r', 'm', 'r', 'a', 't', 'r',
+                'M', 'r', 't', 'm', 'M', 'M', 'M', 'm',
+                'a', 'a', 't', 'm', 'M', 't', 't', 'm',
+                'M', 'm', 'm', 'r', 'M', 't', 'r', 't',
+                't', 'm', 'a', 'm', 'M', 'm', 'M', 'm'
+            };
+
+            string[] solutions = {
+                "Mat", "am", "at", "arm", "art", "mart", "mt", "ra", "ram", "raam", "rat", "tar", "tram"};
+
             // Maybe run the tree first, then save it in the testcontext, and then solve a large board?
-            throw new NotImplementedException();
+            Boggle b = new Boggle(8, 8, board);
+            var testSolutions = from solution in b.Solve(minimalDict, 1, true) orderby solution ascending select solution;
+
+            Assert.IsTrue(testSolutions.SequenceEqual(solutions));
         }
     }
 }

@@ -44,6 +44,7 @@ namespace BoggleManaged
         public bool CaseSensitive { get; private set; }
         public uint MinimumWordLength { get; private set; }
         public uint MaximumWordLength { get; private set; }
+        public uint WordCount { get; private set; }
         #endregion
 
         #region Private Implementation
@@ -75,10 +76,11 @@ namespace BoggleManaged
 
             using (StreamReader dictStream = new StreamReader(file))
             {
+                string nextLine;
                 // Read letter groups
                 while(!dictStream.EndOfStream)
                 {
-                    string nextLine = dictStream.ReadLine();
+                    nextLine = dictStream.ReadLine();
 
                     // Filter
                     if(ShouldLineBeProcessed(nextLine))
@@ -87,6 +89,8 @@ namespace BoggleManaged
                         SaveWord(nextLine);
                     }
                 }
+
+                dictStream.GetType();
             }
         }
 
@@ -122,9 +126,9 @@ namespace BoggleManaged
 
         private bool ShouldLineBeProcessed(string line)
         {
-            if (String.IsNullOrWhiteSpace(line) ||
-                line.Length < MinimumWordLength ||
-                line.Length > MaximumWordLength)
+            if (String.IsNullOrWhiteSpace(line)
+                || line.Length < MinimumWordLength
+                || line.Length > MaximumWordLength)
             {
                 return false;
             }
@@ -147,25 +151,14 @@ namespace BoggleManaged
 
         private void SaveWord(string word)
         {
-            DictNode currNode = null;
-            IDictionary<char, DictNode> currNodeGroup = rootNodes;
-            int pos = 0;
+            char firstChar = word[0];
 
-            while(pos < word.Length)
-            {
-                char currChar = word[pos];
+            if (!rootNodes.ContainsKey(firstChar))
+                rootNodes.Add(firstChar, new DictNode(firstChar, null));
 
-                if(!currNodeGroup.ContainsKey(currChar))
-                {
-                    currNodeGroup.Add(currChar, new DictNode(currChar, null));
-                }
+            rootNodes[firstChar].SaveWord(word);
 
-                currNode = currNodeGroup[currChar];
-                currNodeGroup = currNode.Children;
-                pos++;
-            }
-
-            currNode.Word = word;
+            ++WordCount;
         }
 
         public override string ToString()
