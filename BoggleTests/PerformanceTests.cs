@@ -66,7 +66,7 @@ namespace BoggleTests
         [TestMethod]
         [TestCategory("Performance")]
         [DeploymentItem(minimalDict,"Dictionaries")]
-        [Timeout(120 * 1000)]
+        [Timeout(1000)]
         public void SolveMaxSizeBoardWithSmallDictionary()
         {
             char[] board = {
@@ -81,13 +81,40 @@ namespace BoggleTests
             };
 
             string[] solutions = {
-                "Mat", "am", "at", "arm", "art", "mart", "mt", "ra", "ram", "raam", "rat", "tar", "tram"};
+                "am", "arm", "art", "at", "mart", "Mat", "mt", "ra", "raam", "ram", "rat", "tar", "tram"};
 
             // Maybe run the tree first, then save it in the testcontext, and then solve a large board?
             Boggle b = new Boggle(8, 8, board);
             var testSolutions = from solution in b.Solve(minimalDict, 1, true) orderby solution ascending select solution;
 
-            Assert.IsTrue(testSolutions.SequenceEqual(solutions.OrderBy(s => s)), String.Format("Result: {0}\nExpected: {1}", testSolutions.Aggregate((curr, next) => curr + ", " + next), solutions.OrderBy(s => s).Aggregate((curr, next) => curr + ", " + next)));
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "The proper solution for the boggle board was not found.");
+        }
+
+        [TestMethod]
+        [TestCategory("Performance")]
+        [DeploymentItem(largeDictionary,"Dictionaries")]
+        [Timeout(1000)]
+        public void SolveMaxSizeBoardWithLargeDictionary()
+        {
+            char[] board = {
+                'k', 'i', 'r', 'o', 'e', 'a', 'd', 'e',
+                'a', 's', 'y', 'i', 'y', 's', 'n', 'i',
+                'g', 'o', 'q', 'o', 'i', 'j', 'i', 'g',
+                'n', 'm', 'i', 'a', 'b', 'l', 'a', 'i',
+                'w', 'e', 's', 'e', 'b', 'h', 'e', 'f',
+                'y', 'a', 't', 'h', 'w', 'i', 'm', 'u',
+                'i', 'k', 'a', 'p', 'e', 'k', 'c', 'a',
+                'q', 'k', 'o', 's', 'z', 'i', 'q', 'o',
+            };
+
+            string[] solutions = {
+                "am", "arm", "art", "at", "mart", "Mat", "mt", "ra", "raam", "ram", "rat", "tar", "tram"};
+
+            // Maybe run the tree first, then save it in the testcontext, and then solve a large board?
+            Boggle b = new Boggle(8, 8, board);
+            var testSolutions = from solution in b.Solve(largeDictionary, 1, true) orderby solution ascending select solution;
+
+            Helpers.AssertEnumeratorsAreEqual(solutions, testSolutions, "The proper solution for the boggle board was not found.");
         }
     }
 }

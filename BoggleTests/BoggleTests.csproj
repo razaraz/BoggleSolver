@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="DictionaryTests.cs" />
     <Compile Include="FunctionalTests.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PerformanceTests.cs" />
