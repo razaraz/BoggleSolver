@@ -134,9 +134,6 @@ namespace BoggleManaged
 
             private void TraverseNode(DictNode node, uint? prevTile, UInt64 availableTiles)
             {
-                System.Diagnostics.Debug.Assert(node != null);
-                System.Diagnostics.Debug.Assert(!node.IsEmpty);
-
                 int[] tileCandidates = GetTileCandidates(prevTile, node.Letter, availableTiles);
 
                 if (tileCandidates[0] != -1)

@@ -87,7 +87,6 @@ namespace BoggleManaged
             if (children == null)
                 children = new SortedList<char, DictNode>();
 
-            System.Diagnostics.Debug.Assert(!children.ContainsKey(key));
             children.Add(key, child);
             ++childrenCount;
         }
@@ -101,7 +100,6 @@ namespace BoggleManaged
         {
             get
             {
-                System.Diagnostics.Debug.Assert(children == null || (childrenCount > 0 && children.Count == childrenCount));
                 return childrenCount > 0;
             }
         }
