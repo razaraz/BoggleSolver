@@ -79,16 +79,19 @@ Write-Host -ForegroundColor Blue "Compilation Successful."
 
 # Run Unit Tests
 Write-Host -ForegroundColor Blue "Running Unit Tests."
+
+#  Interface Tests
 $UnitTestAssembly = "BoggleTests\bin\Release\BoggleTests.dll"
 $MSTestArgs = [string[]]@(
-                            "/testcontainer:$UnitTestAssembly"
+                            "/testcontainer:$UnitTestAssembly",
+                            "/category:Interface"
 )
 $MSTestProc = Start-Process -FilePath $MSTestExePath -ArgumentList $MSTestArgs -PassThru
 
 $MSTestProc.WaitForExit();
 echo "MSTest Exit code $($MSTestProc.ExitCode)"
 
-
+# Performance Tests
 $MSTestPerfArgs = [string[]]@(
                             "/testcontainer:$UnitTestAssembly",
                             "/category:Performance",
@@ -98,5 +101,12 @@ $MSTestProc = Start-Process -FilePath $MSTestExePath -ArgumentList $MSTestPerfAr
 
 $MSTestProc.WaitForExit();
 echo "MSTest Exit code $($MSTestProc.ExitCode)"
+
 # Parse MSTest Report
+
 # Generate Report Summary
+
+
+Write-Host -ForegroundColor Green "Build and testing success. Press any key to continue."
+
+[System.Console]::ReadKey()

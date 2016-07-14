@@ -20,26 +20,27 @@ namespace BoggleManaged
         /// <summary>
         /// Creates a new Boggle board with the specified characters and dimentions
         /// </summary>
-        public Boggle(uint width, uint height, char[] board)
+        public Boggle(uint width, uint height, IEnumerable<char> board)
         {
             if (board == null)
             {
                 throw new ArgumentNullException("board");
             }
 
+            Board = board.ToArray();
+
             // Boards are limited to 64 squares due to usage of 64 bit integers for the
             // representations of neighbor tiles.
-            if (width * height != board.Length || board.Length > 64)
+            if (width * height != Board.Length || Board.Length > 64)
             {
-                throw new ArgumentOutOfRangeException("board", board.Length, "Width and Height do not match the board size.");
+                throw new ArgumentOutOfRangeException("board", Board.Length, "Width and Height do not match the board size.");
             }
 
             Width = width;
             Height = height;
-            Board = board;
 
             // Record the number of times each character tile appears
-            var query = from letter in board
+            var query = from letter in Board
                         group letter by letter into letterGroup
                         select letterGroup;
 
@@ -47,12 +48,12 @@ namespace BoggleManaged
 
             CalculateNeighbors();
 
-            characterTileLocationsCaseSensitive = board.Distinct().ToDictionary(l => l, l => 0UL);
-            characterTileLocationsCaseInsensitive = board.Distinct().GroupBy(l => Char.ToLowerInvariant(l)).ToDictionary(l => Char.ToLowerInvariant(l.Key), l => 0UL);
-            for(int i = 0; i < board.Length; ++i)
+            characterTileLocationsCaseSensitive = Board.Distinct().ToDictionary(l => l, l => 0UL);
+            characterTileLocationsCaseInsensitive = Board.Distinct().GroupBy(l => Char.ToLowerInvariant(l)).ToDictionary(l => Char.ToLowerInvariant(l.Key), l => 0UL);
+            for(int i = 0; i < Board.Length; ++i)
             {
-                characterTileLocationsCaseSensitive[board[i]] |= (1UL << i);
-                characterTileLocationsCaseInsensitive[Char.ToLowerInvariant(board[i])] |= (1UL << i);
+                characterTileLocationsCaseSensitive[Board[i]] |= (1UL << i);
+                characterTileLocationsCaseInsensitive[Char.ToLowerInvariant(Board[i])] |= (1UL << i);
             }
         }
 
@@ -82,6 +83,24 @@ namespace BoggleManaged
             TreeVisitor visitor = new TreeVisitor(this, dict, caseSensitive);
 
             return visitor.VisitTree();
+        }
+
+        public override string ToString()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            sb.AppendLine();
+            for(int i = 0; i < Height; ++i)
+            {
+                for(int j = 0; j < Width; ++j)
+                {
+                    sb.AppendFormat(" {0} ", Board[Width * i + j]);
+                }
+                sb.AppendLine();
+            }
+            sb.AppendLine();
+
+            return sb.ToString();
         }
 
         #endregion

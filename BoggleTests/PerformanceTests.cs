@@ -93,7 +93,7 @@ namespace BoggleTests
         [TestMethod]
         [TestCategory("Performance")]
         [DeploymentItem(largeDictionary,"Dictionaries")]
-        [Timeout(10 * 1000)]
+        [Timeout(1000)]
         public void SolveMaxSizeBoardWithLargeDictionary()
         {
             char[] board = {
@@ -282,7 +282,8 @@ namespace BoggleTests
             "yeans", "yeas", "yeast", "yeat", "yen", "yeo", "yes", "yese",
             "yest", "yet", "yeta", "yeth", "yew", "yi", "yis", "yo",
             "yob", "yobi", "yoe", "yoga", "yogas", "yoi", "yom", "yon",
-            "yor", "yoy", "yoyo", "yr", "yrs", "ys", "z", "zek"
+            "yor", "yoy", "yoyo", "yr", "yrs", "ys", "z", "zek",
+            "zep", "zs"
             };
             #endregion
 

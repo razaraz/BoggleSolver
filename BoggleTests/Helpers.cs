@@ -23,6 +23,13 @@ namespace BoggleTests
         
         public static void AssertEnumeratorsAreEqual(IEnumerable<string> expected, IEnumerable<string> actual, string message)
         {
+            var actualenum = actual.GetEnumerator();
+            actualenum.MoveNext();
+            foreach(string s in expected)
+            {
+                System.Diagnostics.Debug.Assert(String.Equals(s, actualenum.Current, StringComparison.InvariantCulture));
+                actualenum.MoveNext();
+            }
             if (!expected.SequenceEqual(actual))
             {
                 Assert.Fail(String.Format("{0}\nExpected: {1}\nActual: {2}\n", message, expected.ToEnumeratedString(), actual.ToEnumeratedString()));

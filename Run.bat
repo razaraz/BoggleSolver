@@ -1,3 +1,3 @@
 @echo off
 
-Powershell -ExecutionPolicy RemoteSigned -NonInteractive -File "%~dp0\Run.ps1"
+Powershell -ExecutionPolicy Bypass -File "%~dp0\Run-Boggle.ps1"
