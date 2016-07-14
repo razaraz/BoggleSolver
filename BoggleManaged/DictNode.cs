@@ -10,12 +10,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BoggleManaged
 {
     /// <summary>
-    /// Represents a node in a dictionary tree.
+    /// Node representing a letter and possibly a word in a dictionary tree.
     /// </summary>
     internal class DictNode : IEnumerable<DictNode>
     {
@@ -30,7 +29,7 @@ namespace BoggleManaged
             childrenToRemove = new List<char>(1);
         }
 
-        public char Letter;
+        public readonly char Letter;
 
         /// <summary>
         /// Contains a full string representation of a word found in the dictionary.
@@ -38,6 +37,10 @@ namespace BoggleManaged
         /// duplicate work.
         /// </summary>
         public string Word;
+
+        /// <summary>
+        /// Indicates if this node's subtree contains no more words
+        /// </summary>
         public bool IsEmpty
         {
             get
@@ -53,13 +56,21 @@ namespace BoggleManaged
             }
         }
 
+        /// <summary>
+        /// Save the word in this node tree
+        /// </summary>
         public void SaveWord(string word)
         {
             SaveWordInternal(word, 0);
         }
         
+        /// <summary>
+        /// Recursively go down this tree's children, and create new nodes that represent this word
+        /// </summary>
+        /// <param name="pos">Current position in the string</param>
         private void SaveWordInternal(string word, int pos)
         {
+            // If we are at the end of the word, save it in this node
             if (pos + 1 == word.Length)
             {
                 Word = word;
@@ -69,6 +80,7 @@ namespace BoggleManaged
             char nextChar = word[++pos];
             DictNode childNode;
 
+            // Add a new node for this letter if it does not exist
             if(children == null || !children.ContainsKey(nextChar))
             {
                 childNode = new DictNode(nextChar, null);
@@ -178,6 +190,9 @@ namespace BoggleManaged
             childrenToRemove.Clear();
         }
 
+        /// <summary>
+        /// Enumerator helper class to allow us to remove children after we've finished iterating
+        /// </summary>
         public class DictNodeEnumerator : IEnumerator<DictNode>
         {
             private DictNode dictNode;

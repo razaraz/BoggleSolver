@@ -6,14 +6,14 @@
 //              board game.
 ///////////////////////////////////////////////////////////////////////////////
 using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace BoggleManaged
 {
+    /// <summary>
+    /// A boggle board that can be solved multiple times with different dictionaries
+    /// </summary>
     public class Boggle
     {
         #region Public Interface
@@ -46,8 +46,10 @@ namespace BoggleManaged
 
             tileCharacterOccurrances = query.ToDictionary(g => g.Key, g => (uint)g.Count());
 
+            // Precalculate the neighbor bitfield representations for this board
             CalculateNeighbors();
 
+            // Keep both
             characterTileLocationsCaseSensitive = Board.Distinct().ToDictionary(l => l, l => 0UL);
             characterTileLocationsCaseInsensitive = Board.Distinct().GroupBy(l => Char.ToLowerInvariant(l)).ToDictionary(l => Char.ToLowerInvariant(l.Key), l => 0UL);
             for(int i = 0; i < Board.Length; ++i)
@@ -64,10 +66,8 @@ namespace BoggleManaged
         /// <summary>
         /// Solves the boggle board using the given dictionary
         /// </summary>
-        /// <exception cref="System.IO.FileNotFoundException">
-        /// This exception will be thrown if the specified dictionary file cannot be opened.
-        /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
+        /// thrown if the minimum word length is less than the board size
         /// </exception>
         public IEnumerable<string> Solve(string dictFile, uint minWordLength = 4, bool caseSensitive = true)
         {
@@ -76,7 +76,7 @@ namespace BoggleManaged
                 throw new ArgumentOutOfRangeException("minWordLength", minWordLength, "The minimum word length is greater than the total size of the board.");
             }
 
-            // Open the dictionary
+            // Open the dictionary, and build the tree representations
             DictionaryTree dict = new DictionaryTree(dictFile, tileCharacterOccurrances, minWordLength, caseSensitive);
 
             // Traverse the dictionary nodes, and resolve if the words are present in the board
@@ -107,6 +107,10 @@ namespace BoggleManaged
 
         #region Private Implementation
 
+        /// <summary>
+        /// Helper class to traverse the dictionary nodes, and resolve possible words.
+        /// This class could be instanced one per thread to speed up solving the board
+        /// </summary>
         private class TreeVisitor
         {
             public TreeVisitor(Boggle board, DictionaryTree dict, bool caseSensitive)
@@ -132,15 +136,24 @@ namespace BoggleManaged
                 return Results;
             }
 
+            /// <summary>
+            /// Recursively traverse letter nodes, and resolve the legal tiles that contain the letter in the node.
+            /// </summary>
+            /// <param name="node">Tree node veing traversed</param>
+            /// <param name="prevTile">The index of the previous tile if not a root node</param>
+            /// <param name="availableTiles">A bitfield representation of all the tiles we have not traversed yet</param>
             private void TraverseNode(DictNode node, uint? prevTile, UInt64 availableTiles)
             {
+                // retreive the tiles that we can move to that contain this letter
                 int[] tileCandidates = GetTileCandidates(prevTile, node.Letter, availableTiles);
 
                 if (tileCandidates[0] != -1)
                 {
+                    // If there's at least one tile reachable with this letter, then the word is a solution in this board
                     if (node.HasWord)
                     {
                         results.Add(node.Word);
+                        // By removing the word from the node, we mark this node as solved
                         node.Word = null;
                     }
 
@@ -153,6 +166,12 @@ namespace BoggleManaged
                 --currBitfieldArray;
             }
 
+            /// <summary>
+            /// Recursively go into the node's children from all the possible tile candidates
+            /// </summary>
+            /// <param name="node">Parent node that contains the current letter</param>
+            /// <param name="tileCandidates">The array of indices of all the legal tiles that contain the parent node's letter</param>
+            /// <param name="availableTiles">Bitfield of all the tiles we have not traversed yet</param>
             private void TraverseNodeChildren(DictNode node, int[] tileCandidates, UInt64 availableTiles)
             {
                 // Explore each of the tile candidate positions as a possible
@@ -160,11 +179,14 @@ namespace BoggleManaged
                 for(int i = 0; i < tileCandidates.Length && tileCandidates[i] >= 0; ++i)
                 {
                     int tilePos = tileCandidates[i];
+
+                    // Flip the bit for this candidate, and mark it as unavailable
                     UInt64 newAvailableTiles = availableTiles ^ (1UL << (int)tilePos);
                     foreach (DictNode child in node)
                     {
                         TraverseNode(child, (uint)tilePos, newAvailableTiles);
 
+                        // If the child tree has all been resolved, remove it.
                         if (child.IsEmpty)
                         {
                             node.RemoveChild(child.Letter);
@@ -175,6 +197,13 @@ namespace BoggleManaged
                 }
             }
 
+            /// <summary>
+            /// Retreive an array of indices of all the legal tiles that contain the requested letter
+            /// </summary>
+            /// <param name="prevPosition">The index of the tile we visited last</param>
+            /// <param name="letter">The letter that we are resolving tile candidates for</param>
+            /// <param name="availableTiles">The bitfield of tiles we have not visited yet</param>
+            /// <returns>An array of the legal tile that contain the letter</returns>
             private int[] GetTileCandidates(uint? prevPosition, char letter, UInt64 availableTiles)
             {
                 if (prevPosition.HasValue)
@@ -185,6 +214,11 @@ namespace BoggleManaged
                 return BitfieldToIntArray(availableTiles);
             }
 
+            /// <summary>
+            /// Translate the bits of a bitfield into an array for easy iteration
+            /// </summary>
+            /// <param name="bitfield">bitfield to turn to an array</param>
+            /// <returns>Array of the indices represented by the bitfield</returns>
             private int[] BitfieldToIntArray(UInt64 bitfield)
             {
                 if (bitfieldArrays.Count <= currBitfieldArray)
@@ -265,6 +299,9 @@ namespace BoggleManaged
             }
         }
 
+        /// <summary>
+        /// Performs a "signed" bit shift to the left. That is, shifting to the right for negative values
+        /// </summary>
         private UInt64 SignedShiftLeft(UInt64 mask, int shift)
         {
             return shift >= 0 ? (mask << shift) : (mask >> -shift) ;

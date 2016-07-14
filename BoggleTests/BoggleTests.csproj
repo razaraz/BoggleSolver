@@ -83,7 +83,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="OrderedTest1.orderedtest">
+    <None Include="FunctionalTests.orderedtest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

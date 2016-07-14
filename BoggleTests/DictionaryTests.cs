@@ -5,7 +5,6 @@
 // Description: Tests that verify the functionality of the Boggle DictionaryTree
 ///////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -215,6 +214,7 @@ namespace BoggleTests
         #endregion
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(System.IO.FileNotFoundException), "Could not open the dictionary file.")]
         public void DictionaryFileDoesNotExist()
         {
@@ -224,6 +224,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(System.IO.InvalidDataException), "The dictionary is not formatted in a proper format.")]
         public void DictionaryFileMalformed()
         {
@@ -253,6 +254,7 @@ namespace BoggleTests
         }
 
         [TestMethod]
+        [TestCategory("Interface")]
         [ExpectedException(typeof(NotSupportedException), "Only one DictNode Enumerator can be supported at this time")]
         [DeploymentItem(basicDict, "Dictionaries")]
         public void DictionaryCanOnlyHaveOneEnumarator()

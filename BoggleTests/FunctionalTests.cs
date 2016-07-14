@@ -175,18 +175,6 @@ namespace BoggleTests
         }
 
         [TestMethod]
-        public void TestTreeVisitor()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void TraverseAllPossibleLetterCandidates()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
         [DeploymentItem(minimalDict,"Dictionaries")]
         public void CaseInsensitiveSensitiveMinimalBoard()
         {

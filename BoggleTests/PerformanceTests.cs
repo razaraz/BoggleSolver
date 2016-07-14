@@ -4,7 +4,6 @@
 // Date: Jul/12/2016
 // Description: Tests that measure performance of the boggle solver.
 ///////////////////////////////////////////////////////////////////////////////
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
