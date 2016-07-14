@@ -103,10 +103,10 @@ function Run-MSTest($TestContainer, $Category)
 
 	if($Category)
 	{ 
-		$MSTestArgs += "/category:Interface"
+		$MSTestArgs += "/category:$Category"
 	}
 
-	Write-Host -BackgroundColor DarkBlue "`tInvoking MSTest for:`n`t`tTestContainer: $TestContainer`n`t`tCategory: Category"
+	Write-Host -BackgroundColor DarkBlue "`tInvoking MSTest for:`n`t`tTestContainer: $TestContainer`n`t`tCategory: $Category"
 	$MSTestProc = Start-Process -FilePath $MSTestExePath -ArgumentList $MSTestArgs -PassThru -WindowStyle Hidden
 
 	$MSTestProc.WaitForExit();
