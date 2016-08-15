@@ -1,3 +1,4 @@
 [submodule "dictionaries"]
 	path = EnglishDictionaries
-	url = https://github.com/dwyl/english-words.git
+	url = https://github.com/razaraz/english-words.git
+    branch = master
