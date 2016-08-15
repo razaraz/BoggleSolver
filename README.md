@@ -1,13 +1,18 @@
-Managed Boggle Solver
+# Managed Boggle Solver
 Ramón Zarazúa B.
 
---- Requirements ---
+A basic implementation of a boggle solver written for .NET
+
+This implementation was made for a coding test, and I'm making it freely
+available under the MIT license. 
+
+## Requirements
 Windows 64-bit
 MSBuild 14.0
 Visual Studio 2015 (MSTest.exe)
 .NET Framework 4.5.2(tested)
 
---- How to run ---
+## How to run
 Invoke Run.bat to start. This will invoke the powershell user interface script Run-Boggle.ps1
 This script verifies that the solution has been compiled, and then loads the assembly
 to start the solver for the user.
@@ -19,7 +24,7 @@ The build script performs the following actions:
   - Load the test result file
   - Display a summary 
 
---- Algorithm ---
+## Algorithm
 
   The possible solutions in a boggle board grow exponentially. This algorithm is therefore
 dictionary-based since the possibility space tends to be much smaller. The dictionary is parsed
@@ -35,7 +40,7 @@ If a word can be formed at this point in the tree, we have found a match. The al
 then recurses to all the child nodes if any. Finally, Nodes that have already been matched,
 and all their children have been matched get removed from the tree to avoid duplicate work.
   
---- Improvement opportunities ---
+## Improvement opportunities
 There are many opportunities for improvement of this program:
 
   - Read dictionary by blocks rather than line
@@ -54,14 +59,4 @@ There are many opportunities for improvement of this program:
   - More efficient bitfield to index array
       We can precalculate 256 bit patterns to indexes into an arry, and use them to get the bitfield
       indices much faster than doing a loop.
-
---- Unit Tests ---
-
-The dictionaries I found and used for testing contained a few more words that could be formed
-on the 3x3 board than the ones in the test description:
-  abox
-  boread
-  daer
-  rebox
-  verby
 
