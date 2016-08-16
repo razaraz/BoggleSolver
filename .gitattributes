@@ -1,0 +1,9 @@
+# .Net source file attributes. Always treat these files as 
+#  having a crlf line ending
+
+# C# Source
+*.cs text eol=crlf
+
+# Powershell Source
+*.ps1 text eol=crlf
+

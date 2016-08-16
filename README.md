@@ -1,10 +1,13 @@
 # Managed Boggle Solver
-Ramón Zarazúa B.
 
 A basic implementation of a boggle solver written for .NET
 
 This implementation was made for a coding test, and I'm making it freely
-available under the MIT license. 
+available under the MIT license. Boggle solvers are a favourite of
+interviewers, and it's always fun to share solutions with the world.
+
+Submitting this code as your own for an employment coding test will only hurt
+your own career.
 
 ## Requirements
 Windows 64-bit

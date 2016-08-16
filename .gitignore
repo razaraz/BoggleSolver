@@ -1,1 +1,29 @@
+# MSBuild Build files
+
+# Output folders
+obj/
+bin/
+
+# Debug database
+*.pdb
+
+# Other
+*.cache
+
+# Unit test result folder
 TestResults/
+
+# Performance run reports
+PerfReports/
+
+# Visual Studio management files
+
+# Solution-wide settings
+*.suo
+.vs/
+
+# Intellisense Databases
+*.sdf
+*.opensdf
+*.VC.opendb
+
